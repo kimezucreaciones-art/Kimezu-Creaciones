@@ -321,6 +321,20 @@ export const Profile: React.FC = () => {
           {/* Sidebar / Coupons */}
           <div className="lg:w-1/3">
             <div className="bg-kimezu-card/20 p-6 border border-kimezu-card sticky top-24">
+
+              {/* Admin Access Link (Only for kaieke37@gmail.com) */}
+              {user?.email === 'kaieke37@gmail.com' && (
+                <div className="bg-kimezu-title text-white p-6 rounded-sm shadow-md mb-8">
+                  <h3 className="font-bold mb-2 flex items-center gap-2">
+                    <UserIcon size={18} /> Panel de Administrador
+                  </h3>
+                  <p className="text-xs text-stone-300 mb-4">Acceso exclusivo para gestión de tienda.</p>
+                  <Button onClick={() => navigate('/admin')} className="w-full bg-white text-kimezu-title hover:bg-stone-200 border-none justify-center">
+                    Ir al Panel
+                  </Button>
+                </div>
+              )}
+
               <div className="flex items-center gap-2 mb-6 text-kimezu-primary">
                 <Ticket size={20} />
                 <h3 className="font-serif text-xl text-kimezu-title">Mis Cupones</h3>
