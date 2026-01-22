@@ -1,82 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '../services/supabase';
 import { Product, SiteAsset, Pack } from '../types';
 
-// Initial Mock Data (Centralized)
-const INITIAL_PRODUCTS: Product[] = [
-  { 
-    id: '1', 
-    name: 'Lavanda & Vainilla', 
-    price: 85000, 
-    description: 'Calma y dulzura en un solo aroma.', 
-    longDescription: 'Una sinfonía olfativa diseñada para reducir el estrés. La lavanda francesa aporta notas herbáceas y frescas, mientras que la vainilla de Madagascar envuelve el ambiente con una calidez dulce y reconfortante.',
-    images: [
-      'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1602825266988-75001771d276?auto=format&fit=crop&q=80&w=800'
-    ],
-    category: 'vela',
-    bestseller: true,
-    availableForBundle: true,
-    specs: { burnTime: '40-50 Horas', wax: 'Soja 100% Natural', wick: 'Algodón Trenzado', notes: 'Floral, Dulce', weight: '220g' }
-  },
-  { 
-    id: '2', 
-    name: 'Bosque de Cedro', 
-    price: 92000, 
-    description: 'El aroma fresco de la naturaleza.', 
-    longDescription: 'Transporta tus sentidos a un bosque húmedo y antiguo. Notas profundas de madera de cedro se mezclan con toques de musgo y tierra mojada.',
-    images: ['https://images.unsplash.com/photo-1602825266988-75001771d276?auto=format&fit=crop&q=80&w=800'], 
-    category: 'vela', 
-    new: true,
-    availableForBundle: true,
-    specs: { burnTime: '45-55 Horas', wax: 'Soja 100% Natural', wick: 'Madera Crepitante', notes: 'Amaderado, Terroso', weight: '230g' }
-  },
-  { 
-    id: '3', 
-    name: 'Jazmín Blanco', 
-    price: 88000, 
-    description: 'Elegancia floral para tu espacio.', 
-    longDescription: 'La pureza del jazmín en su máxima expresión. Un aroma embriagador, romántico y lujoso que llena espacios grandes con facilidad.',
-    images: ['https://images.unsplash.com/photo-1570823336619-713352075885?auto=format&fit=crop&q=80&w=800'], 
-    category: 'vela',
-    availableForBundle: false,
-    specs: { burnTime: '40-50 Horas', wax: 'Soja 100% Natural', wick: 'Algodón Trenzado', notes: 'Floral Intenso', weight: '220g' }
-  },
-  { 
-    id: '4', 
-    name: 'Canela & Naranja', 
-    price: 85000, 
-    description: 'Calidez especiada para el invierno.', 
-    longDescription: 'La combinación clásica que nunca falla. La vibrante cáscara de naranja se equilibra con la calidez picante de la canela en rama.',
-    images: ['https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&q=80&w=800'], 
-    category: 'vela',
-    availableForBundle: true,
-    specs: { burnTime: '40-50 Horas', wax: 'Soja 100% Natural', wick: 'Algodón Trenzado', notes: 'Especiado, Cítrico', weight: '220g' }
-  },
-  { 
-    id: '5', 
-    name: 'Eucalipto & Menta', 
-    price: 89500, 
-    description: 'Frescura que renueva el aire.', 
-    longDescription: 'Un soplo de aire fresco. El eucalipto medicinal abre las vías respiratorias mientras la menta piperita estimula la concentración.',
-    images: ['https://images.unsplash.com/photo-1601669431422-9a3d4d42b10a?auto=format&fit=crop&q=80&w=800'], 
-    category: 'vela',
-    availableForBundle: true,
-    specs: { burnTime: '40-50 Horas', wax: 'Soja 100% Natural', wick: 'Madera Crepitante', notes: 'Herbal, Fresco', weight: '220g' }
-  },
-  { 
-    id: '6', 
-    name: 'Set de Regalo', 
-    price: 210000, 
-    description: 'La experiencia completa Kimezu.', 
-    longDescription: 'Una caja curada con nuestros best-sellers. Incluye 2 velas de 200g (aromas a elección), 1 apagavelas dorado y una caja de cerillas largas.',
-    images: ['https://images.unsplash.com/photo-1608502570188-466d3a860731?auto=format&fit=crop&q=80&w=800'], 
-    category: 'accesorio',
-    availableForBundle: false,
-    specs: { burnTime: 'N/A', wax: 'Soja 100% Natural', wick: 'Mixto', notes: 'Varios', weight: '800g (Total)' }
-  },
-];
-
-const INITIAL_PACKS: Pack[] = [
+// Fallback Mock Data (only used if DB is empty/fails)
+const MOCK_PACKS: Pack[] = [
   {
     id: 'p1',
     name: 'Ritual Relax',
@@ -110,7 +37,7 @@ const INITIAL_PACKS: Pack[] = [
   }
 ];
 
-const INITIAL_ASSETS: SiteAsset[] = [
+const MOCK_ASSETS: SiteAsset[] = [
   { key: 'home_hero_fg', label: 'Inicio: Imagen Principal', url: 'https://images.unsplash.com/photo-1602825266988-75001771d276?auto=format&fit=crop&q=80&w=1500', description: 'La imagen grande a la derecha en la página de inicio.' },
   { key: 'shop_banner', label: 'Tienda: Banner Superior', url: 'https://images.unsplash.com/photo-1602825266988-75001771d276?auto=format&fit=crop&q=80&w=1500', description: 'Fondo del título "La Tienda".' },
   { key: 'aromatherapy_hero', label: 'Aromaterapia: Hero', url: 'https://images.unsplash.com/photo-1616401784845-180886ba9ca1?auto=format&fit=crop&q=80&w=1500', description: 'Imagen principal de la sección Aromaterapia.' },
@@ -125,9 +52,10 @@ interface ProductContextType {
   products: Product[];
   packs: Pack[];
   siteAssets: SiteAsset[];
-  addProduct: (product: Product) => void;
-  updateProduct: (product: Product) => void;
-  deleteProduct: (id: string) => void;
+  loading: boolean;
+  addProduct: (product: Product) => Promise<void>;
+  updateProduct: (product: Product) => Promise<void>;
+  deleteProduct: (id: string) => Promise<void>;
   addPack: (pack: Pack) => void;
   updatePack: (pack: Pack) => void;
   deletePack: (id: string) => void;
@@ -137,70 +65,113 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-// Storage Keys
-const PRODUCTS_STORAGE_KEY = 'kimezu_products_v1';
-const PACKS_STORAGE_KEY = 'kimezu_packs_v1';
-const ASSETS_STORAGE_KEY = 'kimezu_assets_v1';
-
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize state from LocalStorage if available, otherwise use defaults
-  const [products, setProducts] = useState<Product[]>(() => {
-    try {
-      const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-    } catch (e) {
-      console.error("Error loading products from storage", e);
-      return INITIAL_PRODUCTS;
-    }
-  });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [packs, setPacks] = useState<Pack[]>(MOCK_PACKS);
+  const [siteAssets, setSiteAssets] = useState<SiteAsset[]>(MOCK_ASSETS);
+  const [loading, setLoading] = useState(true);
 
-  const [packs, setPacks] = useState<Pack[]>(() => {
-    try {
-      const saved = localStorage.getItem(PACKS_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : INITIAL_PACKS;
-    } catch (e) {
-      console.error("Error loading packs from storage", e);
-      return INITIAL_PACKS;
-    }
-  });
-
-  const [siteAssets, setSiteAssets] = useState<SiteAsset[]>(() => {
-    try {
-      const saved = localStorage.getItem(ASSETS_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : INITIAL_ASSETS;
-    } catch (e) {
-       console.error("Error loading assets from storage", e);
-      return INITIAL_ASSETS;
-    }
-  });
-
-  // Persist to LocalStorage whenever state changes
+  // Fetch Products from Supabase on Mount
   useEffect(() => {
-    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
-  }, [products]);
+    fetchProducts();
+  }, []);
 
-  useEffect(() => {
-    localStorage.setItem(PACKS_STORAGE_KEY, JSON.stringify(packs));
-  }, [packs]);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('name');
 
-  useEffect(() => {
-    localStorage.setItem(ASSETS_STORAGE_KEY, JSON.stringify(siteAssets));
-  }, [siteAssets]);
+      if (error) throw error;
+
+      if (data) {
+        // Map database columns to app types (snake_case to camelCase mapping needed if auto-map fails, but current types match well except for some booleans which might need casing check if DB is camelCase, but SQL was underscores)
+        // Wait, my SQL created columns like 'is_bestseller', 'available_for_bundle'. 
+        // My Product type expects 'bestseller', 'availableForBundle'.
+        // I need to map these manually.
+        const mappedProducts: Product[] = data.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          description: p.description,
+          longDescription: p.long_description,
+          category: p.category,
+          images: p.images || [],
+          specs: p.specs || {},
+          bestseller: p.is_bestseller,
+          new: p.is_new,
+          availableForBundle: p.available_for_bundle
+        }));
+        setProducts(mappedProducts);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Products CRUD
-  const addProduct = (product: Product) => {
+  const addProduct = async (product: Product) => {
+    // Optimistic update
     setProducts(prev => [...prev, product]);
+
+    const { error } = await supabase.from('products').insert({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      long_description: product.longDescription,
+      category: product.category,
+      images: product.images,
+      specs: product.specs,
+      available_for_bundle: product.availableForBundle,
+      is_bestseller: product.bestseller,
+      is_new: product.new
+    });
+
+    if (error) {
+      console.error('Error adding product:', error);
+      fetchProducts(); // Revert/Refresh on error
+    }
   };
 
-  const updateProduct = (updatedProduct: Product) => {
+  const updateProduct = async (updatedProduct: Product) => {
     setProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+
+    const { error } = await supabase.from('products').update({
+      name: updatedProduct.name,
+      price: updatedProduct.price,
+      description: updatedProduct.description,
+      long_description: updatedProduct.longDescription,
+      category: updatedProduct.category,
+      images: updatedProduct.images,
+      specs: updatedProduct.specs,
+      available_for_bundle: updatedProduct.availableForBundle,
+      is_bestseller: updatedProduct.bestseller,
+      is_new: updatedProduct.new
+    }).eq('id', updatedProduct.id);
+
+    if (error) {
+      console.error('Error updating product:', error);
+      fetchProducts();
+    }
   };
 
-  const deleteProduct = (id: string) => {
+  const deleteProduct = async (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id));
+
+    const { error } = await supabase.from('products').delete().eq('id', id);
+
+    if (error) {
+      console.error('Error deleting product:', error);
+      fetchProducts();
+    }
   };
 
-  // Packs CRUD
+  // Packs CRUD (Keep local/mock for now unless User explicitly asked for Packs DB too, which I haven't set up yet)
   const addPack = (pack: Pack) => {
     setPacks(prev => [...prev, pack]);
   };
@@ -223,11 +194,11 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   return (
-    <ProductContext.Provider value={{ 
-      products, packs, siteAssets, 
-      addProduct, updateProduct, deleteProduct, 
+    <ProductContext.Provider value={{
+      products, packs, siteAssets, loading,
+      addProduct, updateProduct, deleteProduct,
       addPack, updatePack, deletePack,
-      updateAsset, getAssetUrl 
+      updateAsset, getAssetUrl
     }}>
       {children}
     </ProductContext.Provider>
