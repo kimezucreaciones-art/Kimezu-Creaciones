@@ -1,180 +1,100 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/Button';
-import { Camera, MapPin, Ticket, User as UserIcon } from 'lucide-react';
-import { COLOMBIA_LOCATIONS } from '../utils/locations';
+import { LogOut, User as UserIcon, Package, Heart, Shield } from 'lucide-react';
+import { formatCOP } from '../utils/currency';
 
 export const Profile: React.FC = () => {
-  const [selectedDept, setSelectedDept] = useState<string>('');
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const { session, user, signOut } = useAuth();
+  const navigate = useNavigate();
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setPhotoPreview(URL.createObjectURL(e.target.files[0]));
+  useEffect(() => {
+    if (!session) {
+      navigate('/login');
     }
+  }, [session, navigate]);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/login');
   };
 
-  const departments = Object.keys(COLOMBIA_LOCATIONS).sort();
-  const municipalities = selectedDept ? COLOMBIA_LOCATIONS[selectedDept].sort() : [];
+  if (!user) return null;
 
   return (
-    <div className="pt-20 md:pt-24 pb-24 min-h-screen bg-kimezu-bg">
+    <div className="pt-32 pb-24 min-h-screen bg-kimezu-bg">
       <div className="container mx-auto px-4 md:px-8">
-        
-        <div className="flex flex-col lg:flex-row gap-12">
-          
-          {/* Main Info Column */}
-          <div className="lg:w-2/3 space-y-8">
-            <h1 className="font-serif text-3xl md:text-4xl text-kimezu-title border-b border-kimezu-card pb-4">
-              Mi Perfil
-            </h1>
 
-            <form className="space-y-8">
-              {/* Photo Section */}
-              <div className="flex items-center space-x-6">
-                <div className="relative group">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-kimezu-primary bg-stone-200">
-                    {photoPreview ? (
-                      <img src={photoPreview} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-stone-400">
-                        <UserIcon size={40} />
-                      </div>
-                    )}
-                  </div>
-                  <label className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 rounded-full cursor-pointer transition-opacity">
-                    <Camera size={24} />
-                    <input type="file" className="hidden" accept="image/*" onChange={handlePhotoChange} />
-                  </label>
-                </div>
-                <div>
-                  <h3 className="font-serif text-xl text-kimezu-title">Tu Foto</h3>
-                  <p className="text-xs text-kimezu-text mt-1">Haz clic en la imagen para cambiarla.</p>
-                </div>
-              </div>
-
-              {/* Personal Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-kimezu-title mb-2">
-                    Nombre de Usuario (Tienda)
-                  </label>
-                  <input type="text" className="w-full bg-white border border-kimezu-card px-4 py-3 focus:border-kimezu-primary outline-none" placeholder="KimezuLover" />
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-kimezu-title mb-2">
-                    Teléfono (Colombia)
-                  </label>
-                  <div className="flex">
-                    <span className="bg-kimezu-card text-kimezu-title px-3 py-3 text-sm border border-r-0 border-kimezu-card font-bold flex items-center">
-                      +57
-                    </span>
-                    <input type="tel" className="w-full bg-white border border-kimezu-card px-4 py-3 focus:border-kimezu-primary outline-none" placeholder="300 123 4567" />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-kimezu-title mb-2">
-                    Fecha de Nacimiento
-                  </label>
-                  <input type="date" className="w-full bg-white border border-kimezu-card px-4 py-3 focus:border-kimezu-primary outline-none text-kimezu-text" />
-                </div>
-              </div>
-
-              {/* Address Section */}
-              <div className="bg-white p-6 border border-kimezu-card mt-8">
-                <div className="flex items-center gap-2 mb-6">
-                  <MapPin size={20} className="text-kimezu-primary" />
-                  <h3 className="font-serif text-xl text-kimezu-title">Dirección de Envío</h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-kimezu-title mb-2">
-                      Departamento
-                    </label>
-                    <select 
-                      value={selectedDept}
-                      onChange={(e) => setSelectedDept(e.target.value)}
-                      className="w-full bg-kimezu-bg border border-kimezu-card px-4 py-3 focus:border-kimezu-primary outline-none text-kimezu-text"
-                    >
-                      <option value="">Seleccionar...</option>
-                      {departments.map(dept => <option key={dept} value={dept}>{dept}</option>)}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest text-kimezu-title mb-2">
-                      Municipio
-                    </label>
-                    <select 
-                      disabled={!selectedDept}
-                      className="w-full bg-kimezu-bg border border-kimezu-card px-4 py-3 focus:border-kimezu-primary outline-none text-kimezu-text disabled:opacity-50"
-                    >
-                      <option value="">Seleccionar...</option>
-                      {municipalities.map(city => <option key={city} value={city}>{city}</option>)}
-                    </select>
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-kimezu-title mb-2">
-                    Dirección Exacta
-                  </label>
-                  <input type="text" className="w-full bg-kimezu-bg border border-kimezu-card px-4 py-3 focus:border-kimezu-primary outline-none" placeholder="Calle 123 # 45-67, Barrio..." />
-                </div>
-              </div>
-
-              <div className="pt-4">
-                <Button>Guardar Cambios</Button>
-              </div>
-            </form>
-          </div>
-
-          {/* Sidebar / Coupons */}
-          <div className="lg:w-1/3">
-            <div className="bg-kimezu-card/20 p-6 border border-kimezu-card sticky top-24">
-              <div className="flex items-center gap-2 mb-6 text-kimezu-primary">
-                <Ticket size={20} />
-                <h3 className="font-serif text-xl text-kimezu-title">Mis Cupones</h3>
-              </div>
-
-              <div className="space-y-4">
-                {/* Coupon 1 */}
-                <div className="bg-white border-l-4 border-kimezu-primary p-4 shadow-sm relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-kimezu-primary/10 rounded-bl-full -mr-8 -mt-8"></div>
-                  <span className="text-xs font-bold text-kimezu-primary uppercase tracking-widest">Activo</span>
-                  <div className="flex justify-between items-end mt-2">
-                    <div>
-                      <span className="block text-2xl font-serif text-kimezu-title font-bold">15% OFF</span>
-                      <span className="text-xs text-kimezu-text">En velas aromáticas</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-stone-400 block uppercase mb-1">Código</span>
-                      <span className="bg-kimezu-bg px-2 py-1 text-xs font-mono font-bold text-kimezu-title border border-dashed border-kimezu-title/30">KIMEZU15</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Coupon 2 */}
-                <div className="bg-white border-l-4 border-kimezu-green p-4 shadow-sm relative overflow-hidden group">
-                  <span className="text-xs font-bold text-kimezu-green uppercase tracking-widest">Bienvenida</span>
-                  <div className="flex justify-between items-end mt-2">
-                    <div>
-                      <span className="block text-2xl font-serif text-kimezu-title font-bold">ENVÍO GRATIS</span>
-                      <span className="text-xs text-kimezu-text">Primera compra</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-stone-400 block uppercase mb-1">Código</span>
-                      <span className="bg-kimezu-bg px-2 py-1 text-xs font-mono font-bold text-kimezu-title border border-dashed border-kimezu-title/30">HOLA2024</span>
-                    </div>
-                  </div>
-                </div>
+        {/* Header Section */}
+        <div className="bg-white p-8 rounded-sm shadow-sm border border-kimezu-card mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center border-4 border-kimezu-bg text-stone-400">
+              <UserIcon size={32} />
+            </div>
+            <div>
+              <h1 className="font-serif text-2xl text-kimezu-title mb-1">
+                Hola, {user.user_metadata.full_name || 'Amante de las Velas'}
+              </h1>
+              <p className="text-kimezu-text text-sm">{user.email}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="bg-stone-100 text-[10px] uppercase font-bold px-2 py-0.5 rounded text-stone-500">Miembro Gratuito</span>
               </div>
             </div>
           </div>
 
+          <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2 text-red-500 hover:text-red-600 hover:bg-red-50 border-red-100">
+            <LogOut size={16} /> Cerrar Sesión
+          </Button>
         </div>
+
+        {/* Dashboard Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* Recent Orders - Placeholder */}
+          <div className="md:col-span-2 bg-white p-6 rounded-sm shadow-sm border border-kimezu-card h-full">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-stone-100">
+              <h2 className="font-serif text-lg text-kimezu-title flex items-center gap-2">
+                <Package size={20} /> Mis Pedidos
+              </h2>
+              <Button variant="outline" className="text-xs h-8 px-3">Ver Todos</Button>
+            </div>
+
+            <div className="text-center py-12 bg-stone-50 rounded border border-dashed border-stone-200">
+              <p className="text-stone-400 mb-2">Aún no has realizado pedidos.</p>
+              <Button variant="primary" onClick={() => navigate('/shop')} className="text-sm">
+                Ir a la Tienda
+              </Button>
+            </div>
+          </div>
+
+          {/* Sidebar Widgets using Supabase Data Mockup for now */}
+          <div className="space-y-6">
+
+            {/* Admin Access Link (Only specific emails) */}
+            {user.email === 'kimezucreaciones@gmail.com' && (
+              <div className="bg-kimezu-title text-white p-6 rounded-sm shadow-md">
+                <h3 className="font-bold mb-2 flex items-center gap-2">
+                  <Shield size={18} /> Panel de Administrador
+                </h3>
+                <p className="text-xs text-stone-300 mb-4">Acceso exclusivo para gestión de tienda.</p>
+                <Button onClick={() => navigate('/admin')} className="w-full bg-white text-kimezu-title hover:bg-stone-200 border-none">
+                  Ir al Panel
+                </Button>
+              </div>
+            )}
+
+            {/* Wishlist Preview */}
+            <div className="bg-white p-6 rounded-sm shadow-sm border border-kimezu-card">
+              <h3 className="font-bold text-kimezu-title mb-4 flex items-center gap-2">
+                <Heart size={18} /> Favoritos
+              </h3>
+              <p className="text-xs text-stone-400">Próximamente: Tu lista de deseos guardada en la nube.</p>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
   );
