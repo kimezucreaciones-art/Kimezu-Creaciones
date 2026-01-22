@@ -39,7 +39,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="pt-28 pb-24 min-h-screen bg-kimezu-bg flex items-start justify-center px-4">
+    <div className="pt-40 pb-24 min-h-screen bg-kimezu-bg flex items-start justify-center px-4">
       <div className="bg-white p-8 md:p-12 rounded-sm shadow-xl max-w-md w-full border border-kimezu-card relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-kimezu-primary"></div>
         <h2 className="font-serif text-3xl text-center text-kimezu-title mb-2">Bienvenido de nuevo</h2>
