@@ -48,7 +48,17 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Inicio', path: '/' },
   { label: 'Tienda', path: '/shop' },
-  { label: 'Combos', path: '/bundles' }, 
+  { label: 'Combos', path: '/bundles' },
   { label: 'Aromaterapia', path: '/aromatherapy' },
   { label: 'Personalizar', path: '/custom-request' },
 ];
+
+export interface Review {
+  id: string;
+  created_at: string;
+  product_id: string;
+  user_id?: string;
+  guest_name?: string;
+  rating: number;
+  comment: string;
+}
