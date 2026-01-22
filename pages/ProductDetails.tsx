@@ -74,10 +74,27 @@ export const ProductDetails: React.FC = () => {
 
     setSubmittingReview(true);
     try {
+      let displayName = 'Invitado';
+
+      if (user) {
+        // Try to fetch username from profile
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.id)
+          .single();
+
+        // Use profile username > metadata name > 'Usuario'
+        displayName = profileData?.username || user.user_metadata.name || 'Usuario';
+      } else {
+        // Guest: use input or legacy 'Invitado'
+        displayName = newReview.guestName.trim() || 'Invitado';
+      }
+
       const reviewPayload = {
         product_id: id,
         user_id: user?.id || null,
-        guest_name: user ? user.user_metadata.name || user.email : newReview.guestName, // Use guest name if not logged in
+        guest_name: displayName,
         rating: newReview.rating,
         comment: newReview.comment,
         created_at: new Date().toISOString()
@@ -380,8 +397,7 @@ export const ProductDetails: React.FC = () => {
                       value={newReview.guestName}
                       onChange={e => setNewReview(prev => ({ ...prev, guestName: e.target.value }))}
                       className="w-full bg-stone-50 border border-stone-200 px-4 py-3 outline-none focus:border-kimezu-primary text-sm transition-all"
-                      placeholder="Ej: María P."
-                      required
+                      placeholder="Ej: María P. (Si lo dejas vacío aparecerá como Invitado)"
                     />
                   </div>
                 )}
