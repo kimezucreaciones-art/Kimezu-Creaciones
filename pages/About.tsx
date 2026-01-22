@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Flame, Droplets, Heart } from 'lucide-react';
+import { Sparkles, Flame, Droplets, Heart, Leaf, Wind } from 'lucide-react';
 import { SectionSeparator } from '../components/SectionSeparator';
 import { Button } from '../components/Button';
 import { Link } from 'react-router-dom';
@@ -9,166 +9,130 @@ export const About: React.FC = () => {
   const { getAssetUrl } = useProducts();
 
   return (
-    <div className="bg-stone-50 overflow-hidden">
+    <div className="bg-kimezu-bg overflow-x-hidden">
 
-      {/* Hero Section - Mystical Entrance */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Overlay */}
-        <div className="absolute inset-0 bg-kimezu-bg opacity-90 z-0"></div>
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.03] z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #D4AF37 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      {/* Hero Section - More compact & colorful */}
+      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
+        {/* Background Overlay with Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-kimezu-bg via-white/50 to-kimezu-bg z-0"></div>
+        {/* Animated Orbs */}
+        <div className="absolute top-10 left-10 w-64 h-64 bg-kimezu-pink/20 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-kimezu-green/20 rounded-full blur-3xl animate-pulse-slow delay-1000"></div>
 
         <div className="relative z-10 text-center max-w-4xl px-6 animate-fade-in-up">
-          <span className="text-kimezu-primary/80 text-xs md:text-sm font-bold uppercase tracking-[0.4em] mb-6 block animate-pulse-slow">
-            Filosofía Kimezu
-          </span>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-kimezu-title mb-8 leading-tight">
-            Alquimia de <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-kimezu-primary via-[#D4AF37] to-kimezu-primary italic">Luz & Energía</span>
+          <div className="inline-flex items-center gap-2 border border-kimezu-primary/30 bg-white/40 backdrop-blur-sm px-4 py-1.5 rounded-full mb-6 shadow-sm">
+            <Sparkles size={14} className="text-kimezu-primary" />
+            <span className="text-kimezu-title text-[10px] font-bold uppercase tracking-[0.3em]">Filosofía Kimezu</span>
+          </div>
+
+          <h1 className="font-serif text-5xl md:text-7xl text-kimezu-title mb-6 leading-none">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-kimezu-title via-kimezu-primary to-kimezu-title">Alquimia</span>
+            <span className="italic block font-light mt-2 text-4xl md:text-6xl text-kimezu-text">de Luz & Energía</span>
           </h1>
-          <p className="text-lg md:text-2xl text-stone-600 font-light max-w-2xl mx-auto leading-relaxed">
-            No solo iluminamos espacios. Restauramos el equilibrio invisible que habita en ellos.
+
+          <p className="text-lg md:text-xl text-kimezu-text/90 max-w-2xl mx-auto leading-relaxed">
+            Donde la artesanía se encuentra con el espíritu. <br className="hidden md:block" />
+            Cada vela es un portal hacia la calma.
           </p>
-
-          <div className="mt-12 opacity-50 animate-bounce">
-            <span className="text-kimezu-primary text-xl">↓</span>
-          </div>
         </div>
       </section>
 
-      {/* 1. The Fire Element: Limpieza Energética */}
-      <section className="py-24 md:py-40 relative">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
-            {/* Left: Visual Concept */}
-            <div className="w-full md:w-1/2 relative group">
-              <div className="absolute inset-0 bg-kimezu-primary/10 -rotate-3 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-1000"></div>
-              <img
-                src={getAssetUrl('about_collage_1')}
-                alt="Candle Flame"
-                className="relative w-full h-[600px] object-cover rounded-sm shadow-2xl grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-              />
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white p-4 flex items-center justify-center rounded-full shadow-lg animate-spin-slow">
-                <svg viewBox="0 0 100 100" className="w-full h-full fill-kimezu-title text-[10px] uppercase font-bold tracking-widest">
-                  <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="transparent" />
-                  <text>
-                    <textPath xlinkHref="#circlePath">
-                      Transmutar • Renovar • Purificar •
-                    </textPath>
-                  </text>
-                </svg>
-                <Flame className="absolute text-kimezu-primary w-8 h-8" fill="currentColor" />
-              </div>
-            </div>
+      {/* 1. Bento Grid / Dense Layout covering Energies & Elements */}
+      <section className="py-12 md:py-20 px-4 container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-6xl mx-auto">
 
-            {/* Right: Narrative */}
-            <div className="w-full md:w-1/2">
-              <SectionSeparator icon="diamond" className="justify-start mb-8 opacity-40" />
-              <h2 className="font-serif text-4xl md:text-6xl text-kimezu-title mb-8 leading-tight">
-                El Fuego Como <br /><span className="italic text-stone-400">Transmutador</span>
-              </h2>
-              <p className="text-lg text-stone-600 mb-8 leading-relaxed font-light">
-                Desde tiempos ancestrales, el fuego ha sido el centro de todo ritual sagrado. No es solo calor o luz; es el elemento capaz de transformar la materia en energía.
+          {/* Big Main Card: Fire/Transmutation */}
+          <div className="md:col-span-8 bg-white p-8 md:p-12 rounded-sm shadow-xl shadow-kimezu-title/5 border-l-4 border-kimezu-pink relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-kimezu-pink/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div className="relative z-10">
+              <Flame className="w-12 h-12 text-kimezu-pink mb-6" strokeWidth={1} />
+              <h2 className="font-serif text-3xl md:text-4xl text-kimezu-title mb-4">El Fuego Transmuta</h2>
+              <p className="text-kimezu-text text-lg leading-relaxed">
+                Encender una vela es un acto sagrado de limpieza. El fuego consume las densidades del ambiente y las transforma en luz y calor. No solo decoramos tu hogar, purificamos su energía vibracional.
               </p>
-              <p className="text-lg text-stone-600 mb-8 leading-relaxed font-light">
-                Al encender una vela Kimezu, no solo estás decorando. Estás activando un pequeño vórtice de limpieza. La llama quema las energías estancadas, las pesadeces del día a día, y las devuelve al universo transformadas en luz.
-              </p>
-              <div className="flex items-center gap-4 text-kimezu-title/80 font-serif italic text-xl border-l-4 border-kimezu-primary pl-6 py-2">
-                "Donde hay luz consciente, la sombra no permanece."
-              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. Aromaterapia: Restauración del Alma */}
-      <section className="py-24 bg-kimezu-title text-stone-300 relative overflow-hidden">
-        {/* Background accent */}
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-white/5 skew-x-12 transform origin-top-right"></div>
+          {/* Side Card: Aromatherapy */}
+          <div className="md:col-span-4 bg-kimezu-green/10 p-8 md:p-10 rounded-sm border border-kimezu-green/20 flex flex-col justify-center relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
+            <Wind className="w-10 h-10 text-kimezu-green mb-4" strokeWidth={1.5} />
+            <h3 className="font-serif text-2xl text-kimezu-title mb-2">Aire Puro</h3>
+            <p className="text-sm text-kimezu-text leading-relaxed">
+              Aceites esenciales botánicos que entran directamente al sistema límbico, calmando la ansiedad y elevando el espíritu instantáneamente.
+            </p>
+            <Leaf className="absolute -bottom-4 -right-4 w-32 h-32 text-kimezu-green/10" />
+          </div>
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20 animate-fade-in">
-            <span className="text-kimezu-green text-xs font-bold uppercase tracking-widest mb-4 block">Medicina Invisible</span>
-            <h2 className="font-serif text-4xl md:text-6xl text-white mb-6">Restauración Emocional</h2>
-            <p className="text-lg opacity-80 font-light">
-              El olfato es el único sentido conectado directamente al sistema límbico, el hogar de nuestras emociones y memorias. Un aroma no se piensa, se siente.
+          {/* Bottom Row */}
+
+          {/* Artisanal Card */}
+          <div className="md:col-span-5 bg-kimezu-primary/5 p-8 md:p-10 rounded-sm border-t-4 border-kimezu-primary relative group hover:-translate-y-1 transition-transform duration-500">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <Heart className="w-6 h-6 text-kimezu-primary" fill="currentColor" />
+              </div>
+              <h3 className="font-serif text-xl text-kimezu-title">Intención Artesanal</h3>
+            </div>
+            <p className="text-sm text-kimezu-text">
+              Las máquinas crean objetos; las manos transfieren energía. Cada vela es vertida intencionando paz y armonía para quien la reciba.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Image Tile */}
+          <div className="md:col-span-7 h-64 md:h-auto relative rounded-sm overflow-hidden group shadow-lg">
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10"></div>
+            <img
+              src={getAssetUrl('about_collage_1')}
+              alt="Ritual"
+              className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[2s]"
+            />
+            <div className="absolute bottom-6 left-6 z-20 text-white">
+              <span className="text-xs font-bold uppercase tracking-widest bg-kimezu-primary px-3 py-1 rounded-full">Rituales</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 2. Interactive "Values" Strip */}
+      <section className="py-16 bg-white border-y border-kimezu-primary/10">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 text-center">
             {[
-              { icon: Droplets, title: "Calma Mental", desc: "Notas como la Lavanda y el Sándalo bajan las revoluciones cerebrales, permitiendo que el silencio interior emerja." },
-              { icon: Sparkles, title: "Elevación Vibracional", desc: "Cítricos y mentas que disipan la niebla mental y elevan tu frecuencia energética instantáneamente." },
-              { icon: Heart, title: "Conexión Interior", desc: "Aromas terrosos y maderas que te enraízan, recordándote tu conexión inquebrantable con la tierra." }
+              { label: "100% Vegano", icon: "🌱" },
+              { label: "Hecho a Mano", icon: "🤲" },
+              { label: "Sin Tóxicos", icon: "✨" },
+              { label: "Energía Limpia", icon: "🔮" }
             ].map((item, idx) => (
-              <div key={idx} className="bg-white/5 backdrop-blur-sm p-10 border border-white/10 hover:bg-white/10 transition-all duration-500 group">
-                <item.icon className="w-12 h-12 text-kimezu-primary mb-6 group-hover:scale-110 transition-transform duration-500" strokeWidth={1} />
-                <h3 className="font-serif text-2xl text-white mb-4">{item.title}</h3>
-                <p className="opacity-70 leading-relaxed font-light">{item.desc}</p>
+              <div key={idx} className="flex flex-col items-center gap-2 group cursor-default">
+                <span className="text-4xl group-hover:scale-125 transition-transform duration-300 filter drop-shadow-sm">{item.icon}</span>
+                <span className="font-serif text-kimezu-title text-lg tracking-wide border-b-2 border-transparent group-hover:border-kimezu-pink transition-all">
+                  {item.label}
+                </span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 3. The Hands: Artisanal Intention */}
-      <section className="py-24 md:py-40 bg-[#Fdfbf7]">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col-reverse md:flex-row items-center gap-16 md:gap-24">
+      {/* 3. The Invitation (CTA) */}
+      <section className="py-20 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-kimezu-title"></div>
+        {/* Gold accent */}
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-kimezu-primary/20 via-transparent to-transparent"></div>
 
-            {/* Content */}
-            <div className="w-full md:w-1/2">
-              <SectionSeparator icon="flower" className="justify-start mb-8 opacity-40" />
-              <h2 className="font-serif text-4xl md:text-6xl text-kimezu-title mb-8 leading-tight">
-                La Intención <br /><span className="italic text-kimezu-primary">del Artesano</span>
-              </h2>
-              <p className="text-lg text-stone-600 mb-6 leading-relaxed font-light">
-                En un mundo industrializado, creemos que la energía de las manos creadoras permanece en el objeto. Una máquina puede hacer mil velas por minuto, pero ninguna tendrá alma.
-              </p>
-              <p className="text-lg text-stone-600 mb-10 leading-relaxed font-light">
-                Cada vela Kimezu es vertida a mano en un estado de presencia y calma. Intencionamos cada lote para que, al llegar a tu hogar, no solo lleve cera y pabilo, sino una vibración de paz y cuidado genuino.
-              </p>
-
-              <div className="grid grid-cols-2 gap-8">
-                <div>
-                  <span className="block text-4xl font-serif text-kimezu-title mb-2">100%</span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Cera de Soja</span>
-                </div>
-                <div>
-                  <span className="block text-4xl font-serif text-kimezu-title mb-2">0%</span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Tóxicos</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Image Grid */}
-            <div className="w-full md:w-1/2 grid grid-cols-2 gap-4">
-              <div className="space-y-4 mt-8">
-                <img src="https://images.unsplash.com/photo-1602825484826-b333a921d017?auto=format&fit=crop&q=80&w=600" className="w-full h-64 object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700" alt="Process 1" />
-                <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&q=80&w=600" className="w-full h-40 object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700" alt="Process 2" />
-              </div>
-              <div className="space-y-4">
-                <img src="https://images.unsplash.com/photo-1596436662444-233c09f872d8?auto=format&fit=crop&q=80&w=600" className="w-full h-40 object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700" alt="Process 3" />
-                <img src="https://images.unsplash.com/photo-1608146797743-398b188c0394?auto=format&fit=crop&q=80&w=600" className="w-full h-64 object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700" alt="Process 4" />
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Footer CTA */}
-      <section className="py-32 text-center bg-white relative">
-        <div className="container mx-auto px-6 relative z-10">
-          <h2 className="font-serif text-4xl md:text-5xl text-kimezu-title mb-8">
-            Empieza tu Ritual
+        <div className="container mx-auto px-6 relative z-10 text-center text-white">
+          <h2 className="font-serif text-4xl md:text-6xl mb-8 leading-tight">
+            Tu hogar es tu templo. <br />
+            <span className="italic text-kimezu-primary">Hónralo.</span>
           </h2>
-          <p className="text-xl text-stone-500 font-light mb-12 max-w-xl mx-auto">
-            Permite que la luz transforme tu espacio y tu energía hoy mismo.
+          <p className="text-lg text-white/70 mb-12 max-w-xl mx-auto font-light">
+            Descubre qué vela resuena con tu energía actual y comienza tu ritual de restauración.
           </p>
+
           <Link to="/shop">
-            <Button className="px-12 py-5 text-sm shadow-xl shadow-kimezu-primary/20 hover:shadow-2xl transition-all hover:-translate-y-1">
-              Explorar Colección <Sparkles className="inline-block ml-2 w-4 h-4" />
+            <Button className="bg-white text-kimezu-title hover:bg-kimezu-primary hover:text-white px-10 py-4 shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+              Ver Colección Completa
             </Button>
           </Link>
         </div>
