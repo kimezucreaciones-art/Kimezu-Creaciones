@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Marquee } from './components/Marquee';
 import { Footer } from './components/Footer';
@@ -17,10 +17,10 @@ import { Profile } from './pages/Profile';
 import { Checkout } from './pages/Checkout';
 import { OrderSuccess } from './pages/OrderSuccess';
 import { OrderFailed } from './pages/OrderFailed';
-import { AdminDashboard } from './pages/AdminDashboard'; // Import Admin Page
+import { AdminDashboard } from './pages/AdminDashboard';
 import { CartProvider } from './context/CartContext';
-import { ProductProvider } from './context/ProductContext'; // Import Product Context
-import { AuthProvider } from './context/AuthContext'; // Import Auth Context
+import { ProductProvider } from './context/ProductContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -28,6 +28,18 @@ const ScrollToTop = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
+};
+
+const AdminRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return null; // Or a spinner
+
+  if (!user || user.email !== 'kaieke37@gmail.com') {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 };
 
 const App: React.FC = () => {
@@ -55,7 +67,14 @@ const App: React.FC = () => {
                   <Route path="/order-success" element={<OrderSuccess />} />
                   <Route path="/order-failed" element={<OrderFailed />} />
                   <Route path="/product/:id" element={<ProductDetails />} />
-                  <Route path="/admin" element={<AdminDashboard />} /> {/* New Route */}
+                  <Route
+                    path="/admin"
+                    element={
+                      <AdminRoute>
+                        <AdminDashboard />
+                      </AdminRoute>
+                    }
+                  />
                 </Routes>
               </main>
               <WhatsAppButton />
