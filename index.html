@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kimezu Creaciones | Velas Artesanales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              kimezu: {
+                bg: '#F2EBE5',        // Reference: Warm Beige / Bone
+                card: '#FFFFFF',      // Reference: White cards/sections
+                primary: '#C89B5A',   // Gold/Bronze accent
+                primaryHover: '#A8743A', 
+                title: '#4A403A',     // Dark Warm Brown text
+                text: '#7D7069',      // Softer Brown text
+                pink: '#C88A83',      // Terracotta/Dusty Rose (The "Red" from Marquee)
+                green: '#8FA99B',     // Sage Green
+                greenHover: '#768c7f',
+                red: '#C88A83',       // Mapped to Pink/Terracotta for consistency
+                redHover: '#B0756E',
+              },
+            },
+            fontFamily: {
+              sans: ['Lato', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            animation: {
+              'marquee': 'marquee 25s linear infinite',
+              'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+              'slide-in-right': 'slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'fade-in': 'fadeIn 0.3s ease-out forwards',
+            },
+            keyframes: {
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-100%)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              slideInRight: {
+                '0%': { transform: 'translateX(100%)' },
+                '100%': { transform: 'translateX(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom scrollbar for a premium feel */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #F2EBE5;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #C89B5A;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #A8743A;
+      }
+      
+      /* Input Focus Reset */
+      input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #C88A83 !important; /* Focus color matches the "pink/red" accent */
+        box-shadow: 0 0 0 1px #C88A83 !important;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-kimezu-bg text-kimezu-text antialiased selection:bg-kimezu-pink selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
