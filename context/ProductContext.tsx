@@ -101,7 +101,34 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         setProducts(mappedProducts);
       }
 
-      // 2. Fetch Site Assets
+
+
+      // 3. Fetch Packs
+      const { data: packsData, error: packsError } = await supabase
+        .from('packs')
+        .select('*');
+
+      if (packsError) {
+        console.warn("Could not fetch packs", packsError);
+      } else if (packsData) {
+        const mappedPacks: Pack[] = packsData.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          originalPrice: p.original_price,
+          image: p.image,
+          items: p.items || [],
+          tagText: p.tag_text,
+          tagColor: p.tag_color
+        }));
+        setPacks(mappedPacks);
+      } else {
+        // Fallback if empty DB (optional, but keep mock for now if needed, or clear)
+        // setPacks([]); 
+      }
+
+      // 2. Fetch Site Assets (Logic kept)
       const { data: assetsData, error: assetsError } = await supabase
         .from('site_assets')
         .select('*');
@@ -109,8 +136,6 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       if (assetsError) {
         console.warn("Could not fetch assets, using fallback.", assetsError);
       } else if (assetsData && assetsData.length > 0) {
-        // Merge with MOCK_ASSETS to ensure all keys exist even if DB is partial
-        // (Though we seeded it, so it should be full)
         setSiteAssets(assetsData);
       }
 
@@ -180,16 +205,59 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   // Packs CRUD (Keep local/mock for now unless User explicitly asked for Packs DB too)
-  const addPack = (pack: Pack) => {
+  // Packs CRUD - Persisted to Supabase
+  const addPack = async (pack: Pack) => {
+    // Optimistic
     setPacks(prev => [...prev, pack]);
+
+    const { error } = await supabase.from('packs').insert({
+      id: pack.id || undefined, // Allow DB to generate if empty, though we usually gen one
+      name: pack.name,
+      description: pack.description,
+      price: pack.price,
+      original_price: pack.originalPrice,
+      image: pack.image,
+      items: pack.items,
+      tag_text: pack.tagText,
+      tag_color: pack.tagColor
+    });
+
+    if (error) {
+      console.error('Error adding pack:', error);
+      fetchData();
+    }
   };
 
-  const updatePack = (updatedPack: Pack) => {
+  const updatePack = async (updatedPack: Pack) => {
+    // Optimistic
     setPacks(prev => prev.map(p => p.id === updatedPack.id ? updatedPack : p));
+
+    const { error } = await supabase.from('packs').update({
+      name: updatedPack.name,
+      description: updatedPack.description,
+      price: updatedPack.price,
+      original_price: updatedPack.originalPrice,
+      image: updatedPack.image,
+      items: updatedPack.items,
+      tag_text: updatedPack.tagText,
+      tag_color: updatedPack.tagColor
+    }).eq('id', updatedPack.id);
+
+    if (error) {
+      console.error('Error updating pack:', error);
+      fetchData();
+    }
   };
 
-  const deletePack = (id: string) => {
+  const deletePack = async (id: string) => {
     setPacks(prev => prev.filter(p => p.id !== id));
+
+    const { error } = await supabase.from('packs').delete().eq('id', id);
+
+    if (error) {
+      console.error('Error deleting pack:', error);
+      fetchData();
+    }
   };
 
   // Assets CRUD - Updated for Persistence
