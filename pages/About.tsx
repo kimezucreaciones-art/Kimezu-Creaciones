@@ -36,62 +36,83 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 1. Bento Grid - Redesigned to be less text-heavy on the left */}
-      <section className="py-12 px-4 container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+      {/* 1. Triangular Layout & Deep Narrative */}
+      <section className="py-16 px-4 container mx-auto">
 
-          {/* Main Card: Fire/Transmutation - Reduced width to 50% (md:col-span-1) */}
-          <div className="bg-white p-8 md:p-12 rounded-sm shadow-xl shadow-kimezu-title/5 border-l-4 border-kimezu-pink relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-kimezu-pink/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="relative z-10">
-              <Flame className="w-12 h-12 text-kimezu-pink mb-6" strokeWidth={1} />
-              <h2 className="font-serif text-3xl md:text-4xl text-kimezu-title mb-4">El Fuego Transmuta</h2>
-              <p className="text-kimezu-text text-lg leading-relaxed">
-                Encender una vela es un acto sagrado de limpieza. El fuego consume las densidades del ambiente y las transforma en luz.
+        {/* The Triangle: Fire & Air Top, Hand Bottom */}
+        <div className="max-w-5xl mx-auto mb-20 space-y-6">
+
+          {/* Top Row: Fire & Air */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Fire Card (Red/Pink) */}
+            <div className="bg-white p-8 md:p-10 rounded-sm shadow-lg shadow-kimezu-pink/5 border-l-4 border-kimezu-pink relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
+              <Flame className="w-10 h-10 text-kimezu-pink mb-4" strokeWidth={1} />
+              <h2 className="font-serif text-2xl text-kimezu-title mb-3">El Fuego Transmuta</h2>
+              <p className="text-kimezu-text text-sm leading-relaxed">
+                Encender una vela es un acto sagrado. El fuego consume las densidades y transforma la pesadez en luz, limpiando tu espacio vibracional.
+              </p>
+            </div>
+
+            {/* Air Card (Green) */}
+            <div className="bg-kimezu-green/10 p-8 md:p-10 rounded-sm border-t-4 border-kimezu-green relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
+              <Wind className="w-10 h-10 text-kimezu-green mb-4" strokeWidth={1.5} />
+              <h3 className="font-serif text-2xl text-kimezu-title mb-3">Aire Puro</h3>
+              <p className="text-sm text-kimezu-text leading-relaxed">
+                Aceites que calman el sistema límbico, disipando la ansiedad y elevando tu frecuencia espiritual al instante.
               </p>
             </div>
           </div>
 
-          {/* Side Card: Aromatherapy */}
-          <div className="bg-kimezu-green/10 p-8 md:p-10 rounded-sm border border-kimezu-green/20 flex flex-col justify-center relative overflow-hidden group hover:-translate-y-1 transition-transform duration-500">
-            <Wind className="w-10 h-10 text-kimezu-green mb-4" strokeWidth={1.5} />
-            <h3 className="font-serif text-2xl text-kimezu-title mb-2">Aire Puro</h3>
-            <p className="text-sm text-kimezu-text leading-relaxed">
-              Aceites esenciales botánicos que entran directamente al sistema límbico, calmando la ansiedad y elevando el espíritu instantáneamente.
-            </p>
-            <Leaf className="absolute -bottom-4 -right-4 w-32 h-32 text-kimezu-green/10" />
-          </div>
-
-          {/* Artisanal Card */}
-          <div className="bg-kimezu-primary/5 p-8 md:p-10 rounded-sm border-t-4 border-kimezu-primary relative group hover:-translate-y-1 transition-transform duration-500">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+          {/* Bottom Point: Artisanal (Yellow/Gold) */}
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-[#FDFBF7] p-8 rounded-sm border-b-4 border-kimezu-primary shadow-lg shadow-kimezu-primary/5 text-center group hover:-translate-y-1 transition-transform duration-500">
+              <div className="inline-flex p-3 bg-white rounded-full shadow-sm mb-4">
                 <Heart className="w-6 h-6 text-kimezu-primary" fill="currentColor" />
               </div>
-              <h3 className="font-serif text-xl text-kimezu-title">Intención Artesanal</h3>
+              <h3 className="font-serif text-xl text-kimezu-title mb-2">Intención Artesanal</h3>
+              <p className="text-sm text-kimezu-text max-w-lg mx-auto">
+                Las manos transfieren energía. Cada vela es vertida intencionando paz, creando un objeto con alma propia.
+              </p>
             </div>
-            <p className="text-sm text-kimezu-text">
-              Las máquinas crean objetos; las manos transfieren energía. Cada vela es vertida intencionando paz.
-            </p>
+          </div>
+        </div>
+
+        {/* 2. New Section: Restoration & Prosperity */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+
+          {/* Left: Deep Text */}
+          <div className="md:col-span-7 text-left pl-4 md:pl-12 border-l-2 border-kimezu-primary/20">
+            <span className="text-kimezu-pink text-xs font-bold uppercase tracking-widest mb-4 block">Renacimiento Interior</span>
+            <h2 className="font-serif text-3xl md:text-5xl text-kimezu-title mb-6 leading-tight">
+              Restauración para el <br />
+              <span className="italic text-kimezu-primary">Alma Agotada</span>
+            </h2>
+            <div className="space-y-6 text-kimezu-text text-lg font-light leading-relaxed">
+              <p>
+                Vivimos tiempos de alto estrés y desconexión. Cuando has pasado por una situación emocional fuerte o sientes que el peso del mundo te apaga, tu hogar debe convertirse en tu santuario de recarga.
+              </p>
+              <p>
+                Nuestros aromas no son casualidad; son herramientas vibracionales. Al encenderlos, invocas la <strong>Prosperidad</strong> que nace de la claridad mental y el merecimiento. Restaurar tu energía no es un lujo, es el primer paso para manifestar la vida que deseas.
+              </p>
+            </div>
           </div>
 
-          {/* Image Tile */}
-          <div className="h-64 md:h-auto relative rounded-sm overflow-hidden group shadow-lg">
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10"></div>
-            <img
-              src={getAssetUrl('about_collage_1')}
-              alt="Ritual"
-              className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[2s]"
-            />
-            <div className="absolute bottom-6 left-6 z-20 text-white">
-              <span className="text-xs font-bold uppercase tracking-widest bg-kimezu-primary px-3 py-1 rounded-full">Rituales</span>
+          {/* Right: Smaller Photo */}
+          <div className="md:col-span-5 flex justify-center md:justify-end">
+            <div className="relative w-72 h-80 rounded-t-full overflow-hidden border-4 border-white shadow-2xl rotate-2 hover:rotate-0 transition-all duration-700">
+              <img
+                src={getAssetUrl('about_collage_1')}
+                alt="Restauración Energética"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-kimezu-primary/20 to-transparent"></div>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* 2. Interactive "Values" Strip - No Emojis, Elegant Icons */}
+      {/* 3. Interactive "Values" Strip */}
       <section className="py-16 bg-white border-y border-kimezu-primary/10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center max-w-5xl mx-auto">
@@ -114,7 +135,7 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. The Invitation (CTA) - Fixed Button Visibility */}
+      {/* 4. The Invitation (CTA) */}
       <section className="py-20 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-kimezu-title"></div>
         {/* Gold accent */}
