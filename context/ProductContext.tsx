@@ -37,15 +37,11 @@ const MOCK_PACKS: Pack[] = [
   }
 ];
 
+// Fallback Assets
 const MOCK_ASSETS: SiteAsset[] = [
   { key: 'home_hero_fg', label: 'Inicio: Imagen Principal', url: 'https://images.unsplash.com/photo-1602825266988-75001771d276?auto=format&fit=crop&q=80&w=1500', description: 'La imagen grande a la derecha en la página de inicio.' },
   { key: 'shop_banner', label: 'Tienda: Banner Superior', url: 'https://images.unsplash.com/photo-1602825266988-75001771d276?auto=format&fit=crop&q=80&w=1500', description: 'Fondo del título "La Tienda".' },
   { key: 'aromatherapy_hero', label: 'Aromaterapia: Hero', url: 'https://images.unsplash.com/photo-1616401784845-180886ba9ca1?auto=format&fit=crop&q=80&w=1500', description: 'Imagen principal de la sección Aromaterapia.' },
-  { key: 'aromatherapy_night', label: 'Aromaterapia: Rutina Noche', url: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=800', description: 'Imagen para la sección de Rutina Nocturna.' },
-  { key: 'aromatherapy_ingredient', label: 'Aromaterapia: Ingrediente', url: 'https://images.unsplash.com/photo-1601669431422-9a3d4d42b10a?auto=format&fit=crop&q=80&w=800', description: 'Imagen destacada del ingrediente (Eucalipto).' },
-  { key: 'about_collage_1', label: 'Inicio: Collage (Arriba)', url: 'https://images.unsplash.com/photo-1545638423-2895249f056d?auto=format&fit=crop&q=80&w=800', description: 'Imagen superior del collage "Artesanía Pura".' },
-  { key: 'about_collage_2', label: 'Inicio: Collage (Abajo)', url: 'https://images.unsplash.com/photo-1608502570188-466d3a860731?auto=format&fit=crop&q=80&w=800', description: 'Imagen superpuesta del collage "Artesanía Pura".' },
-  { key: 'custom_request_main', label: 'Personalizar: Imagen Principal', url: 'https://images.unsplash.com/photo-1608502570188-466d3a860731?auto=format&fit=crop&q=80&w=1000', description: 'Imagen lateral en la página de solicitud personalizada.' },
 ];
 
 interface ProductContextType {
@@ -59,7 +55,7 @@ interface ProductContextType {
   addPack: (pack: Pack) => void;
   updatePack: (pack: Pack) => void;
   deletePack: (id: string) => void;
-  updateAsset: (key: string, newUrl: string) => void;
+  updateAsset: (key: string, newUrl: string) => Promise<void>;
   getAssetUrl: (key: string) => string;
 }
 
@@ -71,27 +67,25 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [siteAssets, setSiteAssets] = useState<SiteAsset[]>(MOCK_ASSETS);
   const [loading, setLoading] = useState(true);
 
-  // Fetch Products from Supabase on Mount
+  // Fetch Data from Supabase on Mount
   useEffect(() => {
-    fetchProducts();
+    fetchData();
   }, []);
 
-  const fetchProducts = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+
+      // 1. Fetch Products
+      const { data: productsData, error: productError } = await supabase
         .from('products')
         .select('*')
         .order('name');
 
-      if (error) throw error;
+      if (productError) throw productError;
 
-      if (data) {
-        // Map database columns to app types (snake_case to camelCase mapping needed if auto-map fails, but current types match well except for some booleans which might need casing check if DB is camelCase, but SQL was underscores)
-        // Wait, my SQL created columns like 'is_bestseller', 'available_for_bundle'. 
-        // My Product type expects 'bestseller', 'availableForBundle'.
-        // I need to map these manually.
-        const mappedProducts: Product[] = data.map((p: any) => ({
+      if (productsData) {
+        const mappedProducts: Product[] = productsData.map((p: any) => ({
           id: p.id,
           name: p.name,
           price: p.price,
@@ -106,8 +100,22 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         }));
         setProducts(mappedProducts);
       }
+
+      // 2. Fetch Site Assets
+      const { data: assetsData, error: assetsError } = await supabase
+        .from('site_assets')
+        .select('*');
+
+      if (assetsError) {
+        console.warn("Could not fetch assets, using fallback.", assetsError);
+      } else if (assetsData && assetsData.length > 0) {
+        // Merge with MOCK_ASSETS to ensure all keys exist even if DB is partial
+        // (Though we seeded it, so it should be full)
+        setSiteAssets(assetsData);
+      }
+
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
@@ -134,7 +142,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     if (error) {
       console.error('Error adding product:', error);
-      fetchProducts(); // Revert/Refresh on error
+      fetchData(); // Revert/Refresh on error
     }
   };
 
@@ -156,7 +164,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     if (error) {
       console.error('Error updating product:', error);
-      fetchProducts();
+      fetchData();
     }
   };
 
@@ -167,11 +175,11 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     if (error) {
       console.error('Error deleting product:', error);
-      fetchProducts();
+      fetchData();
     }
   };
 
-  // Packs CRUD (Keep local/mock for now unless User explicitly asked for Packs DB too, which I haven't set up yet)
+  // Packs CRUD (Keep local/mock for now unless User explicitly asked for Packs DB too)
   const addPack = (pack: Pack) => {
     setPacks(prev => [...prev, pack]);
   };
@@ -184,9 +192,21 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     setPacks(prev => prev.filter(p => p.id !== id));
   };
 
-  // Assets CRUD
-  const updateAsset = (key: string, newUrl: string) => {
+  // Assets CRUD - Updated for Persistence
+  const updateAsset = async (key: string, newUrl: string) => {
+    // 1. Optimistic Update
     setSiteAssets(prev => prev.map(asset => asset.key === key ? { ...asset, url: newUrl } : asset));
+
+    // 2. Persist to DB
+    const { error } = await supabase
+      .from('site_assets')
+      .update({ url: newUrl })
+      .eq('key', key);
+
+    if (error) {
+      console.error('Error updating asset:', error);
+      // Optional: Revert via fetch or show toast
+    }
   };
 
   const getAssetUrl = (key: string) => {
