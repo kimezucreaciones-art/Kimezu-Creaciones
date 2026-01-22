@@ -10,6 +10,7 @@ import { Shop } from './pages/Shop';
 import { ProductDetails } from './pages/ProductDetails';
 import { Bundles } from './pages/Bundles';
 import { Aromatherapy } from './pages/Aromatherapy';
+import { About } from './pages/About';
 import { CustomRequest } from './pages/CustomRequest';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
@@ -59,6 +60,7 @@ const App: React.FC = () => {
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/bundles" element={<Bundles />} />
                   <Route path="/aromatherapy" element={<Aromatherapy />} />
+                  <Route path="/about" element={<About />} />
                   <Route path="/custom-request" element={<CustomRequest />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
