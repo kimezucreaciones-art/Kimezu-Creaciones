@@ -6,11 +6,11 @@ interface MarqueeProps {
 
 export const Marquee: React.FC<MarqueeProps> = ({ className = '' }) => {
   const items = [
-    "ENVÍO GRATIS EN PEDIDOS SUPERIORES A 60€",
+    "ENVÍO GRATIS EN PEDIDOS SUPERIORES A $200.000",
     "HECHO A MANO CON AMOR",
     "CERA DE SOJA 100% NATURAL",
     "ESENCIAS PREMIUM",
-    "ENVÍO GRATIS EN PEDIDOS SUPERIORES A 60€",
+    "ENVÍO GRATIS EN PEDIDOS SUPERIORES A $200.000",
     "HECHO A MANO CON AMOR",
     "CERA DE SOJA 100% NATURAL",
     "ESENCIAS PREMIUM",
