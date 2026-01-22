@@ -158,10 +158,11 @@ export const Profile: React.FC = () => {
   );
 
   return (
-    <div className="pt-20 md:pt-24 pb-24 min-h-screen bg-kimezu-bg">
+    <div className="pt-8 md:pt-16 pb-24 min-h-screen bg-kimezu-bg">
       <div className="container mx-auto px-4 md:px-8">
 
         <div className="flex justify-between items-center mb-6 border-b border-kimezu-card pb-4">
+          {/* ... (rest of header) ... */}
           <h1 className="font-serif text-3xl md:text-4xl text-kimezu-title">
             Mi Perfil
           </h1>
@@ -171,6 +172,8 @@ export const Profile: React.FC = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
+          {/* ... */}
+
 
           {/* Main Info Column */}
           <div className="lg:w-2/3 space-y-8">
