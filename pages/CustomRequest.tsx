@@ -35,7 +35,7 @@ export const CustomRequest: React.FC = () => {
    };
 
    return (
-      <div className="pt-8 md:pt-24 pb-24 min-h-screen bg-kimezu-bg">
+      <div className="pt-4 md:pt-12 pb-24 min-h-screen bg-kimezu-bg">
          <div className="container mx-auto px-4 md:px-8">
 
             <div className="max-w-3xl mx-auto text-center mb-6 md:mb-16 animate-fade-in-up">
