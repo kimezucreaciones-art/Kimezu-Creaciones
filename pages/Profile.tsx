@@ -332,7 +332,7 @@ export const Profile: React.FC = () => {
                     <UserIcon size={18} /> Panel de Administrador
                   </h3>
                   <p className="text-xs text-stone-300 mb-4">Acceso exclusivo para gestión de tienda.</p>
-                  <Button onClick={() => navigate('/admin')} className="w-full bg-[#D4AF37] text-white font-bold hover:bg-[#C5A028] border-none justify-center transition-colors">
+                  <Button onClick={() => navigate('/admin')} className="w-full bg-[#CEA952] text-white font-bold hover:bg-[#BE9946] border-none justify-center transition-colors">
                     Ir al Panel
                   </Button>
                 </div>
