@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { CreditCard, Smartphone, Landmark, Upload, CheckCircle } from 'lucide-react';
 import { formatCOP } from '../utils/currency';
-import nequiQr from '../assets/nequi-qr.png';
+import nequiQr from '../src/assets/nequi-qr.png';
 
 type PaymentMethod = 'card' | 'nequi' | 'bancolombia';
 
