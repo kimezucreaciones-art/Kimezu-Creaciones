@@ -8,14 +8,14 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabase';
 
-type PaymentMethod = 'card' | 'nequi' | 'bancolombia';
+type PaymentMethod = 'nequi' | 'bancolombia';
 
 export const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const { clearCart } = useCart();
   const { user } = useAuth();
 
-  const [method, setMethod] = useState<PaymentMethod>('card');
+  const [method, setMethod] = useState<PaymentMethod>('nequi');
   const [loading, setLoading] = useState(false);
   const [proofFile, setProofFile] = useState<File | null>(null);
 
