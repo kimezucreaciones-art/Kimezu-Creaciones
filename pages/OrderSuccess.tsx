@@ -5,6 +5,9 @@ import { CheckCircle, Package } from 'lucide-react';
 import { GiftBag } from '../components/GiftBag';
 
 export const OrderSuccess: React.FC = () => {
+  // Generate a random order ID for demo purposes so the gift bag always shows up for "new" orders
+  const randomOrderId = React.useMemo(() => `KIM-${Math.floor(Math.random() * 10000)}`, []);
+
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen bg-kimezu-bg flex items-center justify-center px-4">
       <div className="max-w-lg w-full text-center">
@@ -14,7 +17,7 @@ export const OrderSuccess: React.FC = () => {
 
         <h1 className="font-serif text-4xl md:text-5xl text-kimezu-title mb-4">¡Gracias por tu compra!</h1>
         <p className="text-kimezu-text text-lg mb-8">
-          Tu pedido <span className="font-bold font-mono text-kimezu-title">#KIM-9283</span> ha sido procesado exitosamente.
+          Tu pedido <span className="font-bold font-mono text-kimezu-title">#{randomOrderId}</span> ha sido procesado exitosamente.
         </p>
 
         <div className="bg-white p-6 border border-kimezu-card mb-8 text-left shadow-sm">
@@ -31,8 +34,8 @@ export const OrderSuccess: React.FC = () => {
           </Link>
         </div>
 
-        {/* Gift Bag Trigger - Pass a consistent order ID (simulated for now) */}
-        <GiftBag orderId="KIM-9283" />
+        {/* Gift Bag Trigger - Pass the consistent random order ID */}
+        <GiftBag orderId={randomOrderId} />
       </div>
     </div>
   );
