@@ -140,7 +140,8 @@ export const Checkout: React.FC = () => {
       // 5. Trigger Email Notification (Edge Function)
       // We don't await this to avoid blocking the UI if email service is slow, 
       // but logging it is good practice.
-      supabase.functions.invoke('send-new-order', {
+      // 5. Trigger Email Notification (Edge Function)
+      const { error: mailError } = await supabase.functions.invoke('send-new-order', {
         body: {
           orderId: orderData.id,
           customerName: userProfile?.full_name || user.user_metadata?.full_name || 'Cliente',
@@ -160,6 +161,11 @@ export const Checkout: React.FC = () => {
           proofUrl: publicUrl
         }
       });
+
+      if (mailError) {
+        console.error('Error sending email:', mailError);
+        alert('Pedido guardado, pero hubo un error enviando el correo: ' + mailError.message);
+      }
 
       // 6. Success
       clearCart();
