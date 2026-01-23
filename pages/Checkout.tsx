@@ -280,11 +280,6 @@ export const Checkout: React.FC = () => {
                   <span>Envío (Nacional)</span>
                   <span>{formatCOP(shipping)}</span>
                 </div>
-                <div className="flex justify-between text-kimezu-primary">
-                  <span>Descuento (KIMEZU15)</span>
-                  <span>-{formatCOP(standardDiscount)}</span>
-                </div>
-
                 {/* Coupon Display */}
                 {selectedCoupon && (
                   <div className="flex justify-between text-green-600 font-bold bg-green-50 p-2 rounded -mx-2">

@@ -103,15 +103,7 @@ export const CartDrawer: React.FC = () => {
         {items.length > 0 && (
           <div className="p-4 md:p-6 bg-white border-t border-kimezu-card space-y-4">
 
-            {/* Promo Code Input - Styled with Green Focus */}
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Código"
-                className="flex-1 bg-kimezu-bg border border-kimezu-card px-4 py-2 text-sm placeholder-kimezu-text/50"
-              />
-              <Button variant="outline" className="px-3 py-2 text-xs">Aplicar</Button>
-            </div>
+
 
             <div className="space-y-2 py-3 border-b border-dashed border-kimezu-card">
               <div className="flex justify-between text-sm text-kimezu-text">
