@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { CreditCard, Smartphone, Landmark, Upload, CheckCircle } from 'lucide-react';
 import { formatCOP } from '../utils/currency';
+import nequiQr from '../assets/nequi-qr.png';
 
 type PaymentMethod = 'card' | 'nequi' | 'bancolombia';
 
@@ -82,18 +83,21 @@ export const Checkout: React.FC = () => {
 
               {method === 'nequi' && (
                 <div className="p-6 pt-0 border-t border-dashed border-stone-200 mt-2 animate-fade-in-up">
-                  <div className="bg-purple-50 p-6 mb-6 rounded-lg text-[#2a0e42] flex flex-col items-center text-center">
-                    <p className="font-bold mb-4 text-lg">Escanea para pagar con Nequi</p>
+                  <div className="bg-[#FAFAFA] border border-purple-100 p-8 mb-6 rounded-2xl flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                    {/* Decorative top bar */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-400"></div>
+
+                    <p className="font-bold mb-6 text-xl text-[#2a0e42]">Escanea para pagar con Nequi</p>
 
                     {/* QR Code Container */}
-                    <div className="bg-white p-2 rounded-lg shadow-md mb-4 border border-purple-100">
-                      <img src="/src/assets/nequi-qr.png" alt="Código QR Nequi" className="w-48 h-auto mix-blend-multiply" />
+                    <div className="bg-white p-3 rounded-xl shadow-lg shadow-purple-900/5 mb-6">
+                      <img src={nequiQr} alt="Código QR Nequi" className="w-56 h-auto" />
                     </div>
 
-                    <div className="space-y-1">
-                      <p className="font-bold text-sm uppercase tracking-wide opacity-70">O usa la Llave Bre-B:</p>
-                      <p className="text-3xl font-mono font-bold tracking-tight">0091159998</p>
-                      <p className="text-xs mt-2 font-medium">Kimezu Creaciones S.A.S</p>
+                    <div className="space-y-2">
+                      <p className="font-bold text-xs uppercase tracking-[0.2em] text-stone-400">O usa la Llave Bre-B:</p>
+                      <p className="text-4xl font-bold tracking-tight text-[#2a0e42] selection:bg-purple-100">0091159998</p>
+                      <p className="text-sm text-stone-500 font-medium mt-2">Kimezu Creaciones S.A.S</p>
                     </div>
                   </div>
 
