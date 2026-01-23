@@ -12,7 +12,7 @@ type PaymentMethod = 'nequi' | 'bancolombia';
 
 export const Checkout: React.FC = () => {
   const navigate = useNavigate();
-  const { clearCart } = useCart();
+  const { clearCart, items } = useCart();
   const { user } = useAuth();
 
   const [method, setMethod] = useState<PaymentMethod>('nequi');
@@ -66,23 +66,96 @@ export const Checkout: React.FC = () => {
       return;
     }
 
+    if (!user) {
+      alert("Debes iniciar sesión para completar la compra.");
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // 1. If coupon used, mark as used in DB
-      if (selectedCoupon && user) {
+      // 1. Upload Proof Image
+      const fileExt = proofFile.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('payment-proofs')
+        .upload(fileName, proofFile);
+
+      if (uploadError) throw uploadError;
+
+      // Get Public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('payment-proofs')
+        .getPublicUrl(fileName);
+
+      // 2. Create Order Record
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert([
+          {
+            user_id: user.id,
+            total_amount: subtotal,
+            discount_amount: couponDiscountAmount + standardDiscount, // Sum of all discounts
+            final_amount: total,
+            payment_method: method,
+            proof_url: publicUrl,
+            status: 'pending_verification',
+            shipping_address: user.user_metadata?.address || {}, // Snapshot of address
+          }
+        ])
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // 3. Create Order Items
+      const orderItems = items.map(item => ({
+        order_id: orderData.id,
+        product_id: item.id,
+        quantity: item.quantity,
+        price_at_purchase: item.price,
+        product_name: item.name
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      // 4. Mark Coupon as Used (if applicable)
+      if (selectedCoupon) {
         await supabase.from('coupons').update({ is_used: true }).eq('id', selectedCoupon.id);
       }
 
-      // 2. Simulate API / Upload
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 5. Trigger Email Notification (Edge Function)
+      // We don't await this to avoid blocking the UI if email service is slow, 
+      // but logging it is good practice.
+      supabase.functions.invoke('send-new-order', {
+        body: {
+          orderId: orderData.id,
+          customerName: user.user_metadata?.full_name || 'Cliente',
+          customerEmail: user.email,
+          customerPhone: user.user_metadata?.phone || 'N/A',
+          address: user.user_metadata?.address || { address: 'N/A', city: 'N/A', department: 'N/A' },
+          items: items,
+          total: subtotal,
+          discount: couponDiscountAmount + standardDiscount,
+          finalTotal: total,
+          paymentMethod: method,
+          proofUrl: publicUrl
+        }
+      });
 
-      // 3. Success
+      // 6. Success
       clearCart();
       navigate('/order-success');
-    } catch (error) {
-      console.error(error);
-      navigate('/order-failed');
+
+    } catch (error: any) {
+      console.error('Error processing order:', error);
+      alert(`Hubo un error al procesar tu pedido: ${error.message || 'Intenta de nuevo.'}`);
     } finally {
       setLoading(false);
     }
