@@ -97,7 +97,7 @@ export const Checkout: React.FC = () => {
                     <div className="space-y-2">
                       <p className="font-bold text-xs uppercase tracking-[0.2em] text-stone-400">O usa la Llave Bre-B:</p>
                       <p className="text-4xl font-bold tracking-tight text-[#2a0e42] selection:bg-purple-100">0091159998</p>
-                      <p className="text-sm text-stone-500 font-medium mt-2">Kimezu Creaciones S.A.S</p>
+                      <p className="text-sm text-stone-500 font-medium mt-2">Ananda Vargas</p>
                     </div>
                   </div>
 
