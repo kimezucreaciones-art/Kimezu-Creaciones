@@ -109,24 +109,14 @@ export const Checkout: React.FC = () => {
 
               {method === 'card' && (
                 <div className="p-6 pt-0 border-t border-dashed border-stone-200 mt-2 animate-fade-in-up bg-stone-50/50">
-                  <div className="space-y-4 mb-6">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">Número de Tarjeta</label>
-                      <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-white border border-stone-200 p-3 outline-none focus:border-kimezu-primary rounded-sm" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">Expiración</label>
-                        <input type="text" placeholder="MM/AA" className="w-full bg-white border border-stone-200 p-3 outline-none focus:border-kimezu-primary rounded-sm" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">CVC</label>
-                        <input type="text" placeholder="123" className="w-full bg-white border border-stone-200 p-3 outline-none focus:border-kimezu-primary rounded-sm" />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-widest text-stone-500 mb-1">Nombre del Titular</label>
-                      <input type="text" placeholder="Como aparece en la tarjeta" className="w-full bg-white border border-stone-200 p-3 outline-none focus:border-kimezu-primary rounded-sm" />
+                  <div className="bg-white border border-stone-200 p-6 rounded-lg text-center mb-6">
+                    <p className="text-kimezu-title font-serif text-lg mb-2">Pasarela de Pago Segura</p>
+                    <p className="text-sm text-stone-500 mb-4">
+                      Serás redirigido a <strong>Stripe</strong> para completar tu pago de forma 100% segura.
+                      Aceptamos todas las tarjetas de crédito y débito.
+                    </p>
+                    <div className="flex gap-2 justify-center opacity-60 grayscale hover:grayscale-0 transition-all">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-6" />
                     </div>
                   </div>
 
@@ -141,7 +131,7 @@ export const Checkout: React.FC = () => {
                     disabled={loading}
                     className="mt-4 flex justify-center items-center gap-2"
                   >
-                    {loading ? 'Procesando...' : <>Pagar Ahora <CheckCircle size={18} /></>}
+                    {loading ? 'Redirigiendo...' : <>Ir a Pagar con Stripe <CheckCircle size={18} /></>}
                   </Button>
                 </div>
               )}
