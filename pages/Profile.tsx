@@ -38,13 +38,30 @@ export const Profile: React.FC = () => {
   // Derived state for dropdowns
   const municipalities = profile.department ? COLOMBIA_LOCATIONS[profile.department]?.sort() || [] : [];
 
+  const [coupons, setCoupons] = useState<any[]>([]);
+
   useEffect(() => {
     if (!session) {
       navigate('/login');
     } else if (user) {
       fetchProfile();
+      fetchCoupons();
     }
   }, [session, user, navigate]);
+
+  const fetchCoupons = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('coupons')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('is_used', false)
+      .order('created_at', { ascending: false });
+
+    if (data) {
+      setCoupons(data);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -344,37 +361,27 @@ export const Profile: React.FC = () => {
               </div>
 
               <div className="space-y-4">
-                {/* Simulated Coupons (Ideally fetched from DB too) */}
-                <div className="bg-white border-l-4 border-kimezu-primary p-4 shadow-sm relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-kimezu-primary/10 rounded-bl-full -mr-8 -mt-8"></div>
-                  <span className="text-xs font-bold text-kimezu-primary uppercase tracking-widest">Activo</span>
-                  <div className="flex justify-between items-end mt-2">
-                    <div>
-                      <span className="block text-2xl font-serif text-kimezu-title font-bold">15% OFF</span>
-                      <span className="text-xs text-kimezu-text">En velas aromáticas</span>
+                {/* Real Coupons Fetched from DB */}
+                {coupons.length === 0 ? (
+                  <p className="text-sm text-stone-400 italic text-center py-4">No tienes cupones disponibles.</p>
+                ) : (
+                  coupons.map(coupon => (
+                    <div key={coupon.id} className="bg-white border-l-4 border-kimezu-primary p-4 shadow-sm relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-kimezu-primary/10 rounded-bl-full -mr-8 -mt-8"></div>
+                      <span className="text-xs font-bold text-kimezu-primary uppercase tracking-widest">Activo</span>
+                      <div className="flex justify-between items-end mt-2">
+                        <div>
+                          <span className="block text-2xl font-serif text-kimezu-title font-bold">{coupon.discount_percentage}% OFF</span>
+                          <span className="text-xs text-kimezu-text">En tu próxima compra</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] text-stone-400 block uppercase mb-1">Código</span>
+                          <span className="bg-kimezu-bg px-2 py-1 text-xs font-mono font-bold text-kimezu-title border border-dashed border-kimezu-title/30 select-all cursor-pointer">{coupon.code}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-stone-400 block uppercase mb-1">Código</span>
-                      <span className="bg-kimezu-bg px-2 py-1 text-xs font-mono font-bold text-kimezu-title border border-dashed border-kimezu-title/30">KIMEZU15</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white border-l-4 border-kimezu-green p-4 shadow-sm relative overflow-hidden group">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Sparkles size={12} className="text-kimezu-green" />
-                    <span className="text-xs font-bold text-kimezu-green uppercase tracking-widest">Bienvenida</span>
-                  </div>
-                  <div className="flex justify-between items-end mt-2">
-                    <div>
-                      <span className="block text-2xl font-serif text-kimezu-title font-bold">ENVÍO GRATIS</span>
-                      <span className="text-xs text-kimezu-text">Primera compra</span>
-                    </div>
-                    <div className="text-right">
-                      <Button variant="outline" className="text-[10px] px-2 h-7 py-0">Copiar</Button>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
