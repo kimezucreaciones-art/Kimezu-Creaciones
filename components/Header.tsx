@@ -80,8 +80,8 @@ export const Header: React.FC = () => {
   };
 
   const headerClass = `sticky top-0 left-0 w-full z-40 transition-all duration-300 border-b-2 ${isScrolled
-      ? 'bg-kimezu-bg/95 border-kimezu-pink backdrop-blur-md shadow-sm py-2 md:py-3'
-      : 'bg-kimezu-bg border-kimezu-pink py-3 md:py-5'
+    ? 'bg-kimezu-bg/95 border-kimezu-pink backdrop-blur-md shadow-sm py-2 md:py-3'
+    : 'bg-kimezu-bg border-kimezu-pink py-3 md:py-5'
     }`;
 
   const textColorClass = 'text-kimezu-title';
@@ -259,16 +259,16 @@ export const Header: React.FC = () => {
         <div className="p-8 text-center bg-kimezu-card/20">
           <p className="text-xs text-kimezu-text uppercase tracking-widest mb-4">Síguenos</p>
           <div className="flex justify-center space-x-8 text-kimezu-title">
-            <a href="#" className="hover:text-kimezu-primary hover:scale-110 transition-all">
+            <a href="https://www.instagram.com/kimezucreaciones" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary hover:scale-110 transition-all">
               <Instagram size={28} />
             </a>
-            <a href="#" className="hover:text-kimezu-primary hover:scale-110 transition-all">
+            <a href="https://www.facebook.com/creacioneskimezu" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary hover:scale-110 transition-all">
               <Facebook size={28} />
             </a>
-            <a href="#" className="hover:text-kimezu-primary hover:scale-110 transition-all">
+            <a href="https://www.tiktok.com/@kimezucreaciones" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary hover:scale-110 transition-all">
               <TikTokIcon size={28} />
             </a>
-            <a href="#" className="hover:text-kimezu-primary hover:scale-110 transition-all">
+            <a href="https://x.com/kimezucreacion" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary hover:scale-110 transition-all">
               <XIcon size={26} />
             </a>
           </div>

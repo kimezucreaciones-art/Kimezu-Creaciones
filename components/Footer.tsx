@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
             <div className="flex space-x-4 justify-center md:justify-start items-center">
               <a href="https://www.instagram.com/kimezucreaciones" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><Instagram size={20} /></a>
               <a href="https://www.facebook.com/creacioneskimezu" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><Facebook size={20} /></a>
-              <a href="https://www.tiktok.com/@tanukidenstore" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><TikTokIcon size={20} /></a>
+              <a href="https://www.tiktok.com/@kimezucreaciones" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><TikTokIcon size={20} /></a>
               <a href="https://x.com/kimezucreacion" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><XIcon size={18} /></a>
             </div>
           </div>
