@@ -4,11 +4,13 @@ import { Button } from '../components/Button';
 import { CreditCard, Smartphone, Landmark, Upload, CheckCircle } from 'lucide-react';
 import { formatCOP } from '../utils/currency';
 import nequiQr from '../src/assets/nequi-qr.png';
+import { useCart } from '../context/CartContext';
 
 type PaymentMethod = 'card' | 'nequi' | 'bancolombia';
 
 export const Checkout: React.FC = () => {
   const navigate = useNavigate();
+  const { clearCart } = useCart();
   const [method, setMethod] = useState<PaymentMethod>('card');
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +23,7 @@ export const Checkout: React.FC = () => {
       // In a real app, you'd handle errors here.
       const isSuccess = true; // Toggle this to test fail state manually if needed
       if (isSuccess) {
+        clearCart();
         navigate('/order-success');
       } else {
         navigate('/order-failed');

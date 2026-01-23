@@ -76,7 +76,7 @@ export const GiftBag: React.FC<GiftBagProps> = ({ orderId }) => {
         if (hasClaimed) return null;
 
         return (
-            <div className="fixed bottom-6 right-6 z-50 animate-bounce-slow">
+            <div className="fixed bottom-6 left-6 z-50 animate-bounce-slow">
                 <button
                     onClick={() => setIsOpen(true)}
                     className="bg-kimezu-primary text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center gap-2 group"

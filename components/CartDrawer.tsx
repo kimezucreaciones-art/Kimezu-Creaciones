@@ -1,26 +1,38 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Button } from './Button';
-import { Link } from 'react-router-dom';
 import { formatCOP } from '../utils/currency';
 
 export const CartDrawer: React.FC = () => {
   const { isOpen, closeCart, items, updateQuantity, removeFromCart, cartTotal } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    closeCart();
+    if (user) {
+      navigate('/checkout');
+    } else {
+      navigate('/register'); // Or /login, but user specifically said "create account"
+    }
+  };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[60] flex justify-end">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-kimezu-title/40 backdrop-blur-sm animate-fade-in"
         onClick={closeCart}
       ></div>
 
       {/* Drawer */}
       <div className="relative w-[85vw] md:w-full max-w-md bg-kimezu-bg h-full shadow-2xl flex flex-col animate-slide-in-right border-l border-kimezu-card">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-kimezu-card bg-white/50 backdrop-blur-sm">
           <h2 className="font-serif text-xl md:text-2xl text-kimezu-title flex items-center gap-2">
@@ -43,15 +55,15 @@ export const CartDrawer: React.FC = () => {
             items.map(item => (
               <div key={item.id} className="flex gap-3 md:gap-4 group bg-white md:bg-transparent p-2 md:p-0 rounded md:rounded-none shadow-sm md:shadow-none">
                 <div className="w-20 h-20 md:w-24 md:h-24 bg-kimezu-card overflow-hidden flex-shrink-0 relative rounded-sm">
-                   {/* Use images[0] */}
-                   <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
+                  {/* Use images[0] */}
+                  <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
                 </div>
-                
+
                 <div className="flex-1 flex flex-col justify-between py-1">
                   <div>
                     <div className="flex justify-between items-start">
                       <h3 className="font-serif text-base md:text-lg text-kimezu-title leading-tight line-clamp-1">{item.name}</h3>
-                      <button 
+                      <button
                         onClick={() => removeFromCart(item.id)}
                         className="text-stone-300 hover:text-kimezu-pink transition-colors p-1"
                       >
@@ -63,14 +75,14 @@ export const CartDrawer: React.FC = () => {
 
                   <div className="flex items-center gap-4">
                     <div className="flex items-center border border-kimezu-card bg-white">
-                      <button 
+                      <button
                         onClick={() => updateQuantity(item.id, -1)}
                         className="p-1 hover:bg-stone-100 text-kimezu-title"
                       >
                         <Minus size={14} />
                       </button>
                       <span className="w-8 text-center text-xs font-bold text-kimezu-title">{item.quantity}</span>
-                      <button 
+                      <button
                         onClick={() => updateQuantity(item.id, 1)}
                         className="p-1 hover:bg-stone-100 text-kimezu-title"
                       >
@@ -90,15 +102,15 @@ export const CartDrawer: React.FC = () => {
         {/* Footer */}
         {items.length > 0 && (
           <div className="p-4 md:p-6 bg-white border-t border-kimezu-card space-y-4">
-            
+
             {/* Promo Code Input - Styled with Green Focus */}
             <div className="flex gap-2">
-               <input 
-                 type="text" 
-                 placeholder="Código" 
-                 className="flex-1 bg-kimezu-bg border border-kimezu-card px-4 py-2 text-sm placeholder-kimezu-text/50"
-               />
-               <Button variant="outline" className="px-3 py-2 text-xs">Aplicar</Button>
+              <input
+                type="text"
+                placeholder="Código"
+                className="flex-1 bg-kimezu-bg border border-kimezu-card px-4 py-2 text-sm placeholder-kimezu-text/50"
+              />
+              <Button variant="outline" className="px-3 py-2 text-xs">Aplicar</Button>
             </div>
 
             <div className="space-y-2 py-3 border-b border-dashed border-kimezu-card">
@@ -117,11 +129,9 @@ export const CartDrawer: React.FC = () => {
               <span className="font-serif text-2xl text-kimezu-title font-bold">{formatCOP(cartTotal)}</span>
             </div>
 
-            <Link to="/checkout" onClick={closeCart}>
-              <Button variant="secondary" fullWidth className="group">
-                Finalizar <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform ml-2" />
-              </Button>
-            </Link>
+            <Button onClick={handleCheckout} variant="secondary" fullWidth className="group">
+              Finalizar <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform ml-2" />
+            </Button>
           </div>
         )}
       </div>
