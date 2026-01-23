@@ -19,89 +19,37 @@ export const GiftBag: React.FC<GiftBagProps> = ({ orderId }) => {
 
     useEffect(() => {
         // Check local storage to see if this specific order has already claimed a gift
-        // This is a client-side check for UX, the DB constraint is the real truth
         const claimed = localStorage.getItem(`gift_claimed_${orderId}`);
         if (claimed) {
             setHasClaimed(true);
         }
     }, [orderId]);
 
-    const handleOpenBag = async () => {
-        if (!user) return;
-
-        setIsOpening(true);
-
-        // Simulate "shuffling" delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        try {
-            // 80% chance to win, 20% "Better luck next time" logic could go here
-            // For this implementation, let's be generous: Always win something between 3-25%
-
-            const discount = Math.floor(Math.random() * (25 - 3 + 1)) + 3;
-            const code = `KIMEZU-${Math.random().toString(36).substring(2, 7).toUpperCase()}-${discount}`;
-
-            const { error: dbError } = await supabase
-                .from('coupons')
-                .insert([
-                    {
-                        code,
-                        discount_percentage: discount,
-                        user_id: user.id,
-                        is_used: false
-                    }
-                ]);
-
-            if (dbError) {
-                throw dbError;
-            }
-
-            setReward({ discount, code });
-            localStorage.setItem(`gift_claimed_${orderId}`, 'true');
-            setHasClaimed(true);
-
-        } catch (err) {
-            console.error('Error claiming gift:', err);
-            setError('Hubo un error al reclamar tu regalo. Intenta de nuevo.');
-        } finally {
-            setIsOpening(false);
-        }
-    };
-
-    if (hasClaimed && !reward) {
-        return null; // Don't show anything if already claimed and closed (unless showing the reward immediately after claim)
-    }
-
+    // Effect 1: Handle VISIBILITY (Open the bag modal after 1s)
     useEffect(() => {
-        // Auto-open check after small delay for better UX
-        if (!hasClaimed && !isOpen && !reward) {
+        if (!isOpen && !reward && !hasClaimed) {
             const timer = setTimeout(() => {
                 setIsOpen(true);
-                // If user exists, we can even auto-start the spin. 
-                // For now, let's open the modal and let the existing "Opening" logic flow if we want,
-                // or just show the "Click to Open" inside the modal?
-                // User said: "inicie la secuencia de sorteo". So let's auto-trigger handleOpenBag if user is logged in.
-
-                if (user) {
-                    handleOpenBag();
-                }
             }, 1000);
             return () => clearTimeout(timer);
         }
-    }, [hasClaimed, isOpen, reward, user]);
+    }, [isOpen, reward, hasClaimed]);
 
-    const handleOpenBag = async () => {
-        // If handled by effect, we might be here already
+    // Effect 2: Handle LOGIC (Trigger sequence once user is loaded)
+    useEffect(() => {
+        if (isOpen && user && !isOpening && !reward && !hasClaimed) {
+            triggerGiftSequence();
+        }
+    }, [isOpen, user, isOpening, reward, hasClaimed]);
+
+    const triggerGiftSequence = async () => {
         setIsOpening(true);
 
         // Simulate "shuffling" delay
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         try {
-            if (!user) return; // Should likely not happen if we check in effect, but good safety
-
-            // 80% chance to win, 20% "Better luck next time" logic could go here
-            // For this implementation, let's be generous: Always win something between 3-25%
+            if (!user) return;
 
             const discount = Math.floor(Math.random() * (25 - 3 + 1)) + 3;
             const code = `KIMEZU-${Math.random().toString(36).substring(2, 7).toUpperCase()}-${discount}`;
@@ -134,7 +82,7 @@ export const GiftBag: React.FC<GiftBagProps> = ({ orderId }) => {
     };
 
     if (hasClaimed && !reward) {
-        return null; // Don't show anything if already claimed and closed (unless showing the reward immediately after claim)
+        return null;
     }
 
     // Completely remove the floating button rendering when !isOpen
@@ -197,7 +145,7 @@ export const GiftBag: React.FC<GiftBagProps> = ({ orderId }) => {
 
                         {!isOpening && (
                             // Fallback if auto-open didn't trigger for some reason, or to allow manual re-try if error
-                            <Button onClick={handleOpenBag} size="lg" className="w-full text-lg py-4">
+                            <Button onClick={triggerGiftSequence} size="lg" className="w-full text-lg py-4">
                                 ¡Abrir Bolsa!
                             </Button>
                         )}
