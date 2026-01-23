@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { CheckCircle, Package } from 'lucide-react';
 import { GiftBag } from '../components/GiftBag';
 
 export const OrderSuccess: React.FC = () => {
-  // Generate a random order ID for demo purposes so the gift bag always shows up for "new" orders
-  const randomOrderId = React.useMemo(() => `KIM-${Math.floor(Math.random() * 10000)}`, []);
+  const [searchParams] = useSearchParams();
+  // Get the REAL order ID from URL, or fallback to a demo one (but GiftBag will check DB if valid)
+  const orderId = searchParams.get('orderId') || `DEMO-${Math.floor(Math.random() * 10000)}`;
 
   return (
     <div className="pt-20 md:pt-32 pb-24 min-h-screen bg-kimezu-bg flex items-center justify-center px-4">
@@ -17,7 +18,7 @@ export const OrderSuccess: React.FC = () => {
 
         <h1 className="font-serif text-4xl md:text-5xl text-kimezu-title mb-4">¡Gracias por tu compra!</h1>
         <p className="text-kimezu-text text-lg mb-8">
-          Tu pedido <span className="font-bold font-mono text-kimezu-title">#{randomOrderId}</span> ha sido procesado exitosamente.
+          Tu pedido <span className="font-bold font-mono text-kimezu-title">#{orderId.slice(0, 8)}</span> ha sido procesado exitosamente.
         </p>
 
         <div className="bg-white p-6 border border-kimezu-card mb-8 text-left shadow-sm">
@@ -34,8 +35,8 @@ export const OrderSuccess: React.FC = () => {
           </Link>
         </div>
 
-        {/* Gift Bag Trigger - Pass the consistent random order ID */}
-        <GiftBag orderId={randomOrderId} />
+        {/* Gift Bag Trigger - Pass the unique order ID to key the reward */}
+        <GiftBag orderId={orderId} />
       </div>
     </div>
   );

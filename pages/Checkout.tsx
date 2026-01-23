@@ -12,7 +12,7 @@ type PaymentMethod = 'nequi' | 'bancolombia';
 
 export const Checkout: React.FC = () => {
   const navigate = useNavigate();
-  const { clearCart, items } = useCart();
+  const { clearCart, items, cartTotal } = useCart();
   const { user } = useAuth();
 
   const [method, setMethod] = useState<PaymentMethod>('nequi');
@@ -26,9 +26,9 @@ export const Checkout: React.FC = () => {
   const [showCouponModal, setShowCouponModal] = useState(false);
 
   // Financials
-  const subtotal = 295000;
-  const shipping = 12000;
-  const standardDiscount = 18000; // e.g. from bundles
+  const subtotal = cartTotal;
+  const shipping = subtotal > 200000 ? 0 : 12000; // Free shipping over 200k
+  const standardDiscount = 0; // Removed static discount, rely on coupons or cart logic
 
   // Calculate final total based on user coupon
   const couponDiscountAmount = selectedCoupon
@@ -169,7 +169,8 @@ export const Checkout: React.FC = () => {
 
       // 6. Success
       clearCart();
-      navigate('/order-success');
+      // Pass the REAL order ID to the success page so GiftBag is keyed to it
+      navigate(`/order-success?orderId=${orderData.id}`);
 
     } catch (error: any) {
       console.error('Error processing order:', error);
