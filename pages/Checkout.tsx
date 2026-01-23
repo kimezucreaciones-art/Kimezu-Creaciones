@@ -220,48 +220,52 @@ export const Checkout: React.FC = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white p-6 border border-kimezu-card sticky top-24 shadow-sm">
-              <h3 className="font-serif text-xl text-kimezu-title mb-6">Resumen del Pedido</h3>
+            <div className="sticky top-24 space-y-6">
 
-              <div className="space-y-4 mb-6 text-sm text-kimezu-text">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>{formatCOP(subtotal)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Envío (Nacional)</span>
-                  <span>{formatCOP(shipping)}</span>
-                </div>
-                {/* Coupon Display */}
-                {selectedCoupon && (
-                  <div className="flex justify-between text-green-600 font-bold bg-green-50 p-2 rounded -mx-2">
-                    <div className="flex items-center gap-1">
-                      <Ticket size={14} />
-                      <span>Cupón ({selectedCoupon.code})</span>
-                    </div>
-                    <span>-{formatCOP(couponDiscountAmount)}</span>
+              <h2 className="font-serif text-xl text-kimezu-title border-b border-kimezu-card pb-2">Resumen del Pedido</h2>
+
+              <div className="bg-white p-6 border border-kimezu-card shadow-sm">
+
+                <div className="space-y-4 mb-6 text-sm text-kimezu-text">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>{formatCOP(subtotal)}</span>
                   </div>
-                )}
+                  <div className="flex justify-between">
+                    <span>Envío (Nacional)</span>
+                    <span>{formatCOP(shipping)}</span>
+                  </div>
+                  {/* Coupon Display */}
+                  {selectedCoupon && (
+                    <div className="flex justify-between text-green-600 font-bold bg-green-50 p-2 rounded -mx-2">
+                      <div className="flex items-center gap-1">
+                        <Ticket size={14} />
+                        <span>Cupón ({selectedCoupon.code})</span>
+                      </div>
+                      <span>-{formatCOP(couponDiscountAmount)}</span>
+                    </div>
+                  )}
 
-                <div className="pt-2">
-                  <button
-                    onClick={() => setShowCouponModal(true)}
-                    className="text-xs text-kimezu-primary font-bold underline hover:text-kimezu-title flex items-center gap-1"
-                  >
-                    <Ticket size={14} />
-                    {selectedCoupon ? 'Cambiar Cupón' : 'Aplicar Cupón de Regalo'}
-                  </button>
+                  <div className="pt-2">
+                    <button
+                      onClick={() => setShowCouponModal(true)}
+                      className="text-xs text-kimezu-primary font-bold underline hover:text-kimezu-title flex items-center gap-1"
+                    >
+                      <Ticket size={14} />
+                      {selectedCoupon ? 'Cambiar Cupón' : 'Aplicar Cupón de Regalo'}
+                    </button>
+                  </div>
+
+                  <div className="flex justify-between font-bold text-lg text-kimezu-title border-t border-kimezu-card pt-4 mt-2">
+                    <span>Total</span>
+                    <span>{formatCOP(total)}</span>
+                  </div>
                 </div>
 
-                <div className="flex justify-between font-bold text-lg text-kimezu-title border-t border-kimezu-card pt-4 mt-2">
-                  <span>Total</span>
-                  <span>{formatCOP(total)}</span>
-                </div>
+                <p className="text-[10px] text-center mt-4 text-stone-400 leading-tight">
+                  Selecciona un método de pago a la izquierda para finalizar tu compra.
+                </p>
               </div>
-
-              <p className="text-[10px] text-center mt-4 text-stone-400 leading-tight">
-                Selecciona un método de pago a la izquierda para finalizar tu compra.
-              </p>
             </div>
           </div>
         </div>
