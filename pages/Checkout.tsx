@@ -323,9 +323,15 @@ export const Checkout: React.FC = () => {
                     <span>Subtotal</span>
                     <span>{formatCOP(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span>Envío (Nacional)</span>
-                    <span>{formatCOP(shipping)}</span>
+                    {shipping === 0 ? (
+                      <span className="text-green-600 text-[10px] font-bold text-right max-w-[150px] leading-tight">
+                        ¡Como tu compra fue mayor a 200.000 tienes envío gratis!
+                      </span>
+                    ) : (
+                      <span>{formatCOP(shipping)}</span>
+                    )}
                   </div>
                   {/* Coupon Display */}
                   {selectedCoupon && (
