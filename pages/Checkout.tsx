@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
-import { CreditCard, Smartphone, Landmark, Upload, CheckCircle, Ticket, X } from 'lucide-react';
+import { Smartphone, Landmark, Upload, CheckCircle, Ticket, X } from 'lucide-react';
 import { formatCOP } from '../utils/currency';
 import nequiQr from '../src/assets/nequi-qr.png';
 import { useCart } from '../context/CartContext';
@@ -61,7 +61,7 @@ export const Checkout: React.FC = () => {
   };
 
   const handlePayment = async () => {
-    if ((method === 'nequi' || method === 'bancolombia') && !proofFile) {
+    if (!proofFile) {
       alert("Por favor sube el comprobante de pago para continuar.");
       return;
     }
@@ -98,44 +98,6 @@ export const Checkout: React.FC = () => {
           {/* Payment Methods */}
           <div className="lg:col-span-2 space-y-6">
             <h2 className="font-serif text-xl text-kimezu-title border-b border-kimezu-card pb-2">Método de Pago</h2>
-
-            {/* Credit Card Option */}
-            <div className={`border ${method === 'card' ? 'border-kimezu-primary bg-white' : 'border-kimezu-card bg-white/50'} transition-all duration-300 rounded-lg overflow-hidden`}>
-              <label className="flex items-center gap-4 p-4 cursor-pointer">
-                <input type="radio" name="payment" className="accent-kimezu-primary w-5 h-5" checked={method === 'card'} onChange={() => { setMethod('card'); setProofFile(null); }} />
-                <div className="p-2 bg-stone-100 rounded text-stone-600"><CreditCard size={24} /></div>
-                <span className="font-bold text-kimezu-title">Tarjeta de Crédito / Débito</span>
-              </label>
-
-              {method === 'card' && (
-                <div className="p-6 pt-0 border-t border-dashed border-stone-200 mt-2 animate-fade-in-up bg-stone-50/50">
-                  <div className="bg-white border border-stone-200 p-6 rounded-lg text-center mb-6">
-                    <p className="text-kimezu-title font-serif text-lg mb-2">Pasarela de Pago Segura</p>
-                    <p className="text-sm text-stone-500 mb-4">
-                      Serás redirigido a <strong>Stripe</strong> para completar tu pago de forma 100% segura.
-                      Aceptamos todas las tarjetas de crédito y débito.
-                    </p>
-                    <div className="flex gap-2 justify-center opacity-60 grayscale hover:grayscale-0 transition-all">
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-6" />
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center border-t border-stone-200 pt-4">
-                    <span className="font-serif text-lg text-kimezu-title font-bold">Total a Pagar:</span>
-                    <span className="text-xl font-bold text-kimezu-primary">{formatCOP(total)}</span>
-                  </div>
-
-                  <Button
-                    fullWidth
-                    onClick={handlePayment}
-                    disabled={loading}
-                    className="mt-4 flex justify-center items-center gap-2"
-                  >
-                    {loading ? 'Redirigiendo...' : <>Ir a Pagar con Stripe <CheckCircle size={18} /></>}
-                  </Button>
-                </div>
-              )}
-            </div>
 
             {/* Nequi Option */}
             <div className={`border ${method === 'nequi' ? 'border-kimezu-primary bg-white' : 'border-kimezu-card bg-white/50'} transition-all duration-300 rounded-lg overflow-hidden`}>
