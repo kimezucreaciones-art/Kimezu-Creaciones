@@ -16,6 +16,7 @@ export const Checkout: React.FC = () => {
   const { user } = useAuth();
 
   const [method, setMethod] = useState<PaymentMethod>('nequi');
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [proofFile, setProofFile] = useState<File | null>(null);
 
@@ -39,6 +40,7 @@ export const Checkout: React.FC = () => {
   useEffect(() => {
     if (user) {
       fetchCoupons();
+      fetchProfile();
     }
   }, [user]);
 
@@ -52,6 +54,11 @@ export const Checkout: React.FC = () => {
       .order('created_at', { ascending: false });
 
     if (data) setCoupons(data);
+  };
+
+  const fetchProfile = async () => {
+    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    if (data) setUserProfile(data);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,10 +143,15 @@ export const Checkout: React.FC = () => {
       supabase.functions.invoke('send-new-order', {
         body: {
           orderId: orderData.id,
-          customerName: user.user_metadata?.full_name || 'Cliente',
+          customerName: userProfile?.full_name || user.user_metadata?.full_name || 'Cliente',
           customerEmail: user.email,
-          customerPhone: user.user_metadata?.phone || 'N/A',
-          address: user.user_metadata?.address || { address: 'N/A', city: 'N/A', department: 'N/A' },
+          customerPhone: userProfile?.phone || user.user_metadata?.phone || 'N/A',
+          address: {
+            address: userProfile?.address || user.user_metadata?.address?.address || 'N/A',
+            city: userProfile?.municipality || user.user_metadata?.address?.city || 'N/A',
+            department: userProfile?.department || user.user_metadata?.address?.department || 'N/A',
+            notes: ''
+          },
           items: items,
           total: subtotal,
           discount: couponDiscountAmount + standardDiscount,
