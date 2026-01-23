@@ -72,26 +72,78 @@ export const GiftBag: React.FC<GiftBagProps> = ({ orderId }) => {
         return null; // Don't show anything if already claimed and closed (unless showing the reward immediately after claim)
     }
 
-    if (!isOpen) {
-        if (hasClaimed) return null;
+    useEffect(() => {
+        // Auto-open check after small delay for better UX
+        if (!hasClaimed && !isOpen && !reward) {
+            const timer = setTimeout(() => {
+                setIsOpen(true);
+                // If user exists, we can even auto-start the spin. 
+                // For now, let's open the modal and let the existing "Opening" logic flow if we want,
+                // or just show the "Click to Open" inside the modal?
+                // User said: "inicie la secuencia de sorteo". So let's auto-trigger handleOpenBag if user is logged in.
 
-        return (
-            <div className="fixed bottom-24 right-6 z-50 animate-bounce-slow">
-                <button
-                    onClick={() => setIsOpen(true)}
-                    className="bg-kimezu-primary text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center gap-2 group"
-                >
-                    <Gift size={24} className="group-hover:rotate-12 transition-transform" />
-                    <span className="font-bold text-sm uppercase tracking-widest hidden group-hover:block whitespace-nowrap overflow-hidden animate-fade-in">
-                        Abrir Regalo
-                    </span>
-                </button>
-            </div>
-        );
+                if (user) {
+                    handleOpenBag();
+                }
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [hasClaimed, isOpen, reward, user]);
+
+    const handleOpenBag = async () => {
+        // If handled by effect, we might be here already
+        setIsOpening(true);
+
+        // Simulate "shuffling" delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        try {
+            if (!user) return; // Should likely not happen if we check in effect, but good safety
+
+            // 80% chance to win, 20% "Better luck next time" logic could go here
+            // For this implementation, let's be generous: Always win something between 3-25%
+
+            const discount = Math.floor(Math.random() * (25 - 3 + 1)) + 3;
+            const code = `KIMEZU-${Math.random().toString(36).substring(2, 7).toUpperCase()}-${discount}`;
+
+            const { error: dbError } = await supabase
+                .from('coupons')
+                .insert([
+                    {
+                        code,
+                        discount_percentage: discount,
+                        user_id: user.id,
+                        is_used: false
+                    }
+                ]);
+
+            if (dbError) {
+                throw dbError;
+            }
+
+            setReward({ discount, code });
+            localStorage.setItem(`gift_claimed_${orderId}`, 'true');
+            setHasClaimed(true);
+
+        } catch (err) {
+            console.error('Error claiming gift:', err);
+            setError('Hubo un error al reclamar tu regalo. Intenta de nuevo.');
+        } finally {
+            setIsOpening(false);
+        }
+    };
+
+    if (hasClaimed && !reward) {
+        return null; // Don't show anything if already claimed and closed (unless showing the reward immediately after claim)
+    }
+
+    // Completely remove the floating button rendering when !isOpen
+    if (!isOpen) {
+        return null;
     }
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
             <div className="bg-white rounded-2xl p-8 max-w-md w-full relative overflow-hidden shadow-2xl text-center">
 
                 <button
@@ -144,15 +196,10 @@ export const GiftBag: React.FC<GiftBagProps> = ({ orderId }) => {
                         </h3>
 
                         {!isOpening && (
-                            <>
-                                <p className="text-stone-600 mb-8">
-                                    Toca el botón para descubrir tu descuento exclusivo para la próxima compra.
-                                    <br /><span className="text-xs text-stone-400">(Puede ser entre 3% y 25%)</span>
-                                </p>
-                                <Button onClick={handleOpenBag} size="lg" className="w-full text-lg py-4">
-                                    ¡Abrir Bolsa!
-                                </Button>
-                            </>
+                            // Fallback if auto-open didn't trigger for some reason, or to allow manual re-try if error
+                            <Button onClick={handleOpenBag} size="lg" className="w-full text-lg py-4">
+                                ¡Abrir Bolsa!
+                            </Button>
                         )}
 
                         {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
