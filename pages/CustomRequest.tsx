@@ -28,7 +28,7 @@ export const CustomRequest: React.FC = () => {
 🌿 *Aroma Preferido:* ${formData.scent}
 ✨ *Detalles de la idea:* ${formData.details}`;
 
-      const phoneNumber = "573001234567"; // Replace with real number
+      const phoneNumber = "573117107008"; // Kimezu Official WhatsApp
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
       window.open(whatsappUrl, '_blank');

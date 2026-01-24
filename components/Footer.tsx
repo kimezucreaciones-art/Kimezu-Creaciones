@@ -48,9 +48,13 @@ export const Footer: React.FC = () => {
                 Creaciones
               </span>
             </div>
-            <p className="text-stone-300 text-sm leading-relaxed mb-6 max-w-xs mx-auto md:mx-0">
-              Velas artesanales y detalles hechos a mano que combinan estética, aroma y simbolismo para crear ambientes cálidos, especiales y llenos de significado.
+            <p className="text-stone-300 text-sm leading-relaxed mb-4 max-w-xs mx-auto md:mx-0">
+              Velas artesanales y detalles hechos a mano que combinan estética, aroma y simbolismo para crear ambientes cálidos.
             </p>
+            <div className="mb-6 flex items-center gap-2 text-kimezu-primary font-bold text-sm">
+              <span className="bg-green-600/20 p-1.5 rounded-full"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
+              <a href="https://wa.me/573117107008" target="_blank" rel="noopener noreferrer" className="hover:underline">WhatsApp: 311 710 7008</a>
+            </div>
             <div className="flex space-x-4 justify-center md:justify-start items-center">
               <a href="https://www.instagram.com/kimezucreaciones" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><Instagram size={20} /></a>
               <a href="https://www.facebook.com/creacioneskimezu" target="_blank" rel="noopener noreferrer" className="hover:text-kimezu-primary transition-colors"><Facebook size={20} /></a>
