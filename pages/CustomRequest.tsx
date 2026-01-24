@@ -21,12 +21,12 @@ export const CustomRequest: React.FC = () => {
       e.preventDefault();
 
       // Format the message for WhatsApp
-      const message = `👋 Hola Kimezu! Tengo una idea para una vela personalizada:
+      const message = `Hola Kimezu! Tengo una idea para una vela personalizada:
     
-👤 *Nombre:* ${formData.name}
-🎁 *Ocasión:* ${formData.occasion}
-🌿 *Aroma Preferido:* ${formData.scent}
-✨ *Detalles de la idea:* ${formData.details}`;
+Nombre: ${formData.name}
+Ocasión: ${formData.occasion}
+Aroma Preferido: ${formData.scent}
+Detalles de la idea: ${formData.details}`;
 
       const phoneNumber = "573117107008"; // Kimezu Official WhatsApp
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
